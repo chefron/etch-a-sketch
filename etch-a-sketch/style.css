@@ -89,7 +89,7 @@ input[type="color"] {
     height: auto;
     display: block;
     user-select: none;
-    outline: 5px solid gold;
+    outline: 5px solid #d4af37;
     filter: brightness(110%);
 }
 

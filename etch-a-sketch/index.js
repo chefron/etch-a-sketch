@@ -14,30 +14,26 @@ function populateGrid() {
 populateGrid();
 
 const gridIcon = document.getElementById("grid-icon");
-
 let isGridHidden = true;
 
-if(isGridHidden){
-    gridIcon.addEventListener("click", showGrid);
-} else {
-    gridIcon.addEventListener("click", hideGrid);
+gridIcon.addEventListener("click", toggleGrid);
+
+function toggleGrid(){
+    if (isGridHidden){
+        for (let i = 0; i < numOfSquares; i++){
+                squares[i].style.borderStyle = "dashed"};
+        console.log("show grid");
+    } else {
+        for (let i = 0; i < numOfSquares; i++){
+                squares[i].style.borderStyle = "none"};
+        console.log("hide grid");
+    }; 
+    isGridHidden = !isGridHidden;
 }
 
-function showGrid() {
-    
-    for (let i = 0; i < numOfSquares; i++){
-            squares[i].style.borderStyle = "dashed"
-            console.log("show grid")
-    };
-}
 
-function hideGrid() {
-    for (let i = 0; i < numOfSquares; i++){
-        squares[i].style.borderStyle = "none"
-        console.log("hide grid")
-};
- 
-}
+
+
 
 
 
