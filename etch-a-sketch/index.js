@@ -1,4 +1,4 @@
-let numOfSquares = 100;
+let numOfSquares = 500;
 
 const grid = document.getElementById("grid");
 
@@ -12,6 +12,35 @@ function populateGrid() {
 }
 
 populateGrid();
+
+const gridIcon = document.getElementById("grid-icon");
+
+let isGridHidden = true;
+
+if(isGridHidden){
+    gridIcon.addEventListener("click", showGrid);
+} else {
+    gridIcon.addEventListener("click", hideGrid);
+}
+
+function showGrid() {
+    
+    for (let i = 0; i < numOfSquares; i++){
+            squares[i].style.borderStyle = "dashed"
+            console.log("show grid")
+    };
+}
+
+function hideGrid() {
+    for (let i = 0; i < numOfSquares; i++){
+        squares[i].style.borderStyle = "none"
+        console.log("hide grid")
+};
+ 
+}
+
+
+
 
 const squares = document.querySelectorAll(".square");
     
@@ -48,12 +77,13 @@ for (let i = 0; i < numOfSquares; i++){
 
 
 let colorSelection = "#FF0000"; // Default color is red
-
 const colorPicker = document.getElementById("color-picker");
+const hex = document.getElementById("hex"); // HEX text in color picker
 
 // Gets color from color pickeer
 colorPicker.addEventListener("input", function(){
     colorSelection = colorPicker.value;
+    hex.innerHTML = colorPicker.value;
     console.log(colorPicker.value);
     }, false);
 

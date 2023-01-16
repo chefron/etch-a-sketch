@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deface the Mona Lisa</title>
     <script src = "index.js" defer></script>
-    <script src="jscolor.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,27 +13,32 @@
 
     <div id="flex-container">
 
+        <div id="mona-lisa-container" draggable="false">
+
+            <img id="mona-lisa" src="images/mona-lisa.jpg" draggable="false"/>
+
+            <div id="grid" draggable="false">
+            </div>
+
+        </div>
+
         <div id="toolbox">
 
             <div id="swatch">
 
                 <input type="color" id="color-picker" value="#FF0000"></input>
 
-                <div id="info">
+                <div class="info">
                     <h1>COLOR</h1>
-                    <h2>HEX</h2>
+                    <h2 id="hex">#FF0000</h2>
                 </div>
 
             </div>
 
+            <div id="grid-icon-container">
 
-        </div>
+                <img id="grid-icon" src="images/grid-icon.png" onclick="showGrid(), hideGrid()"/>
 
-        <div id="mona-lisa-container" draggable="false">
-
-            <img id="mona-lisa" src="images/mona-lisa.jpg" draggable="false"/>
-
-            <div id="grid" draggable="false">
             </div>
 
         </div>
