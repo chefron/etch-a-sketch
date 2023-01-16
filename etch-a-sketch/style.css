@@ -1,14 +1,50 @@
-#grid-container {
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    font: 2.2vh Helvetica-Neue, Helvetica, sans-serif;
+    background: #13294B;
+}
+
+#flex-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#mona-lisa-container {
+    position: relative;
     width: 50vw;
-    height: 50vw;
+    max-width: 515px;
+    height: auto;
+    user-select: none;
+    
+}
+
+#mona-lisa {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    user-select: none;
+}
+
+#grid {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     border: 1px solid black;
+    user-select: none;
 }
 
 .square {
-    background: white;
     flex: 1 1 auto;
-    border: 2px solid black;
+    border: 1px dashed rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
+    user-select: none;
 }
+
