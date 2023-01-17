@@ -64,12 +64,21 @@ input[type="color"] {
     align-items: center;
 }
 
+#grid-icon-container {
+    display: flex;
+    flex-direction: column;
+}
+
 #grid-icon {
-    background: rgba(255, 255, 255, 0.719);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 #grid-icon:hover {
     scale: 1.1;
+}
+
+#slider {
+    width: 100%;
 }
 
 #mona-lisa-container {
