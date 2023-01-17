@@ -52,12 +52,20 @@ function paint(i){
 }
 
 slider.addEventListener("change", function(){
-    numOfSquares = slider.value;
+    numOfSquares = Math.pow(Math.round(Math.sqrt(slider.value)), 2);
     clearGrid();
     setTimeout(function(){
         repopulateGrid();
     },10);
-})
+    getNumberOfSquares();
+});
+
+function getNumberOfSquares(){
+    const squareCount = document.getElementById("square-count")
+    squareCount.innerHTML = `${Math.sqrt(numOfSquares)} &#215 ${Math.sqrt(numOfSquares)}`;
+}
+
+getNumberOfSquares();
 
 function repopulateGrid(){
 
@@ -87,6 +95,23 @@ function clearGrid(){
     squares.forEach(square => square.remove());
     squares = document.querySelectorAll(".square");
 }
+ 
+
+const gridIconWrapper = document.getElementById("grid-icon-wrapper");
+const gridIconText = document.getElementById("cross-out");
+
+
+function hightlightIcon(){
+    gridIconWrapper.style.opacity = "100%";
+    gridIconWrapper.style.background = "rgba(255, 255, 255, 1)";
+    gridIconText.innerHTML = "GRID ON";
+}
+
+function dehighlightIcon(){
+    gridIconWrapper.style.opacity = "initial";
+    gridIconWrapper.style.background = "initial";
+    gridIconText.innerHTML = "GRID OFF";
+}
 
 const gridIcon = document.getElementById("grid-icon");
 
@@ -99,14 +124,18 @@ function toggleGrid(){
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "dashed"};
         console.log("show grid");
+        hightlightIcon();
     } else {
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "none"};
         console.log("hide grid");
+        dehighlightIcon();
     }; 
     isGridHidden = !isGridHidden;
 }
     
+
+
 
 
 
