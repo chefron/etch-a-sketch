@@ -126,7 +126,6 @@ input[type="color"] {
     margin-top: 4vmin;
     margin-bottom: 4vmin;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
-    
 }
 
 #mona-lisa {
@@ -136,6 +135,14 @@ input[type="color"] {
     user-select: none;
     outline: 5px solid #d4af37;
     filter: brightness(110%);
+    animation: portrait-burn 12s linear forwards;
+}
+
+@keyframes portrait-burn {
+    0%   {filter: brightness(100%);}     
+    65%  {filter: brightness(100%);}
+    90%  {filter: brightness(0%);}
+    100% {filter: brightness(0%);}
 }
 
 #grid {
@@ -157,69 +164,60 @@ input[type="color"] {
 }
 
 :root {
-    --size: 110vh;
+    --size: 77vh;
     --s: calc(var(--size) / 6);
-    --bor: calc(var(--size) / 30);
-    --boxShadow: calc(var(--size) / 12);
-  }
+    --bor: calc(var(--size) / 40);
+    --boxShadow: calc(var(--size) / 10);
+}
 
 .circle {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 45%;
+    top: 47%;
     transform:translate(-50%, -50%);
-    width: var(--size);
-    height: var(--size);
+    width: 107%;
+    height: 103%;
     filter: url(#wavy) blur(1px);
 }
-
+  
 .circle:before,
 .circle:after {
-  content: "";
-  position: absolute;
-  top: var(--s);
-  left: var(--s);
-  right: var(--s);
-  bottom: var(--s);
-  border-radius: 50%;
-  border: var(--bor) solid #fff;
+    content: "";
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    right: 0%; 
+    bottom: 0%;
+    border-radius: 15%;
+    border: var(--bor) solid rgb(249, 249, 255);
+    animation: burn 15s ease-in forwards;
 }
+
+@keyframes burn {
+    0%   {top: 50%;
+          left: 50%;
+          right: 50%; 
+          bottom: 50%;
+          border-radius: 50%;}
+    50%  {
+          top: -3%;
+          left: -3%;
+          right: -3%; 
+          bottom: 3%;
+          border-radius: 30%;}
+    75%  {border-radius: 15%;}
+    100% {border-radius: 15%;}
+}
+
 .circle:before {
-  box-shadow: 0 0 var(--boxShadow) #0f0, inset 0 0 var(--boxShadow) #0f0;
-  -webkit-box-reflect: below 10px
-    linear-gradient(transparent, transparent, #0002);
-  animation: move 5s linear infinite;
+    box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
 }
 
 .circle:after {
-  box-shadow: 0 0 calc(var(--bor)/2) #fff, inset 0 0 var(--bor) #fff;
-}
-
-@keyframes move {
-  0% {
-    box-shadow: 0 0 var(--boxShadow) #0f0, inset 0 0 var(--boxShadow) #0f0;
-    filter: hue-rotate(0deg);
-  }
-  20% {
-    box-shadow: 0 0 60px #0f0, inset 0 0 60px #0f0;
-  }
-
-  40% {
-    box-shadow: 0 0 40px #0f0, inset 0 0 40px #0f0;
-  }
-  60% {
-    box-shadow: 0 0 80px #0f0, inset 0 0 80px #0f0;
-  }
-  80% {
-    box-shadow: 0 0 100px #0f0, inset 0 0 100px #0f0;
-  }
-  100% {
-    box-shadow: 0 0 var(--boxShadow) #0f0, inset 0 0 var(--boxShadow) #0f0;
-    filter: hue-rotate(360deg);
-  }
+    box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
 }
 
 svg {
-  width: 0;
-  height: 0;
+    width: 0;
+    height: 0;
 }
