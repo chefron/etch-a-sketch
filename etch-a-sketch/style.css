@@ -126,16 +126,18 @@ input[type="color"] {
     margin-top: 4vmin;
     margin-bottom: 4vmin;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
+    outline: 5px solid #d4af37;
+    overflow: hidden;
 }
 
 #mona-lisa {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     user-select: none;
-    outline: 5px solid #d4af37;
+    
     filter: brightness(110%);
-    animation: portrait-burn 12s linear forwards;
+    sanimation: portrait-burn 12s linear forwards;
 }
 
 @keyframes portrait-burn {
@@ -166,7 +168,7 @@ input[type="color"] {
 :root {
     --size: 77vh;
     --s: calc(var(--size) / 6);
-    --bor: calc(var(--size) / 40);
+    --bor: calc(var(--size) / 60);
     --boxShadow: calc(var(--size) / 10);
 }
 
@@ -175,11 +177,14 @@ input[type="color"] {
     left: 45%;
     top: 47%;
     transform:translate(-50%, -50%);
-    width: 107%;
-    height: 103%;
-    filter: url(#wavy) blur(1px);
+    width: 100%;
+    height: 100%;
+    filter: url(#wavy) blur(.75px);
 }
-  
+
+
+
+
 .circle:before,
 .circle:after {
     content: "";
@@ -198,26 +203,36 @@ input[type="color"] {
           left: 50%;
           right: 50%; 
           bottom: 50%;
-          border-radius: 50%;}
+          border-width: var(--bor);
+          border-radius: 50%;
+    }
     50%  {
-          top: -3%;
-          left: -3%;
-          right: -3%; 
-          bottom: 3%;
-          border-radius: 30%;}
-    75%  {border-radius: 15%;}
+          top:  0%;
+          left: 0%;
+          right: 0%; 
+          bottom: 0%;
+          border-radius: 40%;
+    }
+    80%  {border-width: calc(var(--bor)*1.2);
+          border-radius: 15%;
+    }
     100% {border-radius: 15%;}
 }
 
 .circle:before {
     box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
+    
 }
 
 .circle:after {
     box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
+    background-image: url(images/fire.png);
+    background-repeat: no-repeat;
+    background-size: 200%;
 }
 
 svg {
     width: 0;
     height: 0;
+    display: block;
 }
