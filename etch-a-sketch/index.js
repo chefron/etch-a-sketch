@@ -160,7 +160,6 @@ colorPicker.addEventListener("input", function(){
 
 
 
-
 //function changeColor() {
  //   squares[i].style.backgroundColor = "red";
 //}
