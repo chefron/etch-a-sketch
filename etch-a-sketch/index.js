@@ -141,6 +141,25 @@ function toggleGrid(){
     //ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
 //}
 
+const monaLisaContainer = document.getElementById("mona-lisa-container");
+
+//records where user clicks on Mona Lisa
+monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
+    const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of div
+    console.log(dimensions);
+    const x = e.clientX - dimensions.left; // x position within element
+    const y = e.clientY - dimensions.top; // y position within element
+    console.log(x, y);
+    
+    const div = document.createElement("div");
+    div.className = "circle";
+    div.style.left = `${x}px`;
+    div.style.top = `${y}px`;
+    monaLisaContainer.appendChild(div);
+}
+
+
+
 const canvas = document.getElementById("mona-lisa-canvas");
 const ctx = canvas.getContext("2d");
 
