@@ -97,20 +97,20 @@ function clearGrid(){
 }
  
 
-const gridIconWrapper = document.getElementById("grid-icon-wrapper");
+const gridIconWrapper = document.querySelector(".grid-icon-wrapper");
 const gridIconText = document.getElementById("cross-out");
 
 
 function hightlightIcon(){
     gridIconWrapper.style.opacity = "100%";
     gridIconWrapper.style.background = "rgba(255, 255, 255, 1)";
-    gridIconText.innerHTML = "GRID ON";
+ //   gridIconText.innerHTML = "GRID ON";
 }
 
 function dehighlightIcon(){
     gridIconWrapper.style.opacity = "initial";
     gridIconWrapper.style.background = "initial";
-    gridIconText.innerHTML = "GRID OFF";
+ //   gridIconText.innerHTML = "GRID OFF";
 }
 
 const gridIcon = document.getElementById("grid-icon");
@@ -153,8 +153,30 @@ colorPicker.addEventListener("input", function(){
     console.log(colorPicker.value);
     }, false);
 
+const buttons = document.querySelectorAll(".button");
 
 
+buttons.forEach(button => {
+    button.addEventListener("click", function(){
+        activateButton(button.id);
+    })
+});
+
+const blowtorchButton = document.getElementById("blowtorch-button");
+
+function activateButton (buttonSelection){
+    if (buttonSelection == "blowtorch-button"){
+        activateBlowtorch();
+    }
+}
+
+function activateBlowtorch(){
+    blowtorchButton.classList.remove("blowtorch-icon");
+    blowtorchButton.classList.add("activate-blowtorch");
+    document.body.classList.add("blowtorch-cursor");
+}
+
+    
 
 
 
