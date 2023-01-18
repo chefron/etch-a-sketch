@@ -134,7 +134,36 @@ function toggleGrid(){
     isGridHidden = !isGridHidden;
 }
     
+//window.onload = function() {
+  //  const canvas = document.getElementById("mona-lisa-canvas");
+    //const ctx = canvas.getContext("2d");
+    //const img = document.getElementById("mona-lisa");
+    //ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
+//}
 
+const canvas = document.getElementById("mona-lisa-canvas");
+const ctx = canvas.getContext("2d");
+
+const particles = [];
+
+canvas.onmousedown = function(e){
+    for (i = 0; i < 36 * 2; i++){
+        particles.push({
+            x: e.clientX,
+            y: e.clientY,
+            angle: i * 5,
+            size: 5 + Math.random() * 3,
+            life: 200 + Math.random() * 50
+        });
+    }
+}
+
+canvas.onmouseup = function (){
+    // blank
+}
+
+const delta = 0;
+const last = Date.now;
 
 
 
