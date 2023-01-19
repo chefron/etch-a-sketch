@@ -1,3 +1,23 @@
+let colorSelection = "#963A2F"; // Default color is red
+const colorPicker = document.getElementById("color-picker");
+const hex = document.getElementById("hex"); // HEX text in color picker
+
+// Gets color from color picker
+colorPicker.addEventListener("input", function(){
+    colorSelection = colorPicker.value;
+    hex.innerHTML = colorPicker.value;
+    console.log(colorPicker.value);
+    }, false);
+
+const buttons = document.querySelectorAll(".button");
+
+
+buttons.forEach(button => {
+    button.addEventListener("click", function(){
+        activateButton(button.id);
+    })
+});
+
 const slider = document.getElementById("slider");
 const grid = document.getElementById("grid");
 let isGridHidden = true;
@@ -8,7 +28,7 @@ let squares = document.querySelectorAll(".square");
 
 function populateGrid(){
     for (let i = 0; i < numOfSquares; i++){
-        const square = document.createElement('div');
+        let square = document.createElement('div');
         square.classList.add("square");
         square.style.width = `${(100/(Math.sqrt(numOfSquares))) + "%"}`;
         grid.appendChild(square);
@@ -43,13 +63,19 @@ document.addEventListener("mouseup", function(){
 
 // Changes square colors when you drag mouse over them
 function paint(i){
-    const squares = document.querySelectorAll(".square");
+    let squares = document.querySelectorAll(".square");
     return function(){
         if (mouseDown){
         squares[i].style.backgroundColor = colorSelection;
         }
     };
 }
+
+function clearGrid(){
+    squares.forEach(square => square.remove());
+    squares = document.querySelectorAll(".square");
+}
+ 
 
 slider.addEventListener("change", function(){
     numOfSquares = Math.pow(Math.round(Math.sqrt(slider.value)), 2);
@@ -90,13 +116,6 @@ function repopulateGrid(){
     assignEventListeners();
 }
 
-
-function clearGrid(){
-    squares.forEach(square => square.remove());
-    squares = document.querySelectorAll(".square");
-}
- 
-
 const gridIconWrapper = document.querySelector(".grid-icon-wrapper");
 const gridIconText = document.getElementById("cross-out");
 
@@ -119,7 +138,7 @@ const gridIcon = document.getElementById("grid-icon");
 gridIcon.addEventListener("click", toggleGrid);
 
 function toggleGrid(){
-    const squares = document.querySelectorAll(".square");
+    let squares = document.querySelectorAll(".square");
     if (isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "dashed"};
@@ -143,30 +162,144 @@ function toggleGrid(){
 
 const monaLisaContainer = document.getElementById("mona-lisa-container");
 
-//records where user clicks on Mona Lisa
-monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
-    const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of div
-    console.log(dimensions);
-    const x = e.clientX - dimensions.left; // x position within element
-    const y = e.clientY - dimensions.top; // y position within element
-    console.log(x, y);
-    
-    const div = document.createElement("div");
-    div.className = "circle";
-    div.style.left = `${x}px`;
-    div.style.top = `${y}px`;
-    monaLisaContainer.appendChild(div);
+let isBlowtorchSelected = false;
+const blowtorchButton = document.getElementById("blowtorch-button");
+
+function activateButton (buttonSelection){
+    if (buttonSelection == "blowtorch-button"){
+        activateBlowtorch();
+        isBlowtorchSelected = true;
+    }
+}
+
+function activateBlowtorch(){
+    blowtorchButton.classList.remove("blowtorch-icon");
+    blowtorchButton.classList.add("activate-blowtorch");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
 
+//records where user clicks on Mona Lisa with blowtorch cursor
+monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
+    if (isBlowtorchSelected){
+    const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
+    console.log(dimensions);
+    const left = e.clientX - dimensions.left; // x position within element
+    const right = dimensions.width - left;
+    const top = e.clientY - dimensions.top; // y position within element
+    const bottom = dimensions.height - top;
+    console.log(left, right, top, bottom);
+    
+    monaLisaContainer.style.setProperty("--left", `${left}px`);
+    monaLisaContainer.style.setProperty("--right", `${right}px`);
+    monaLisaContainer.style.setProperty("--top", `${top}px`);
+    monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+    const div = document.createElement("div");
+    div.className = "circle";
+    monaLisaContainer.appendChild(div);
+}};
 
-const canvas = document.getElementById("mona-lisa-canvas");
+//PAINT SPLATTER:
+
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const monaLisaSize = monaLisaContainer.getBoundingClientRect();
+console.log(monaLisaSize);
+
+canvas.width = monaLisaSize.width;
+canvas.height = monaLisaSize.height;
+canvas.style.left = monaLisaSize.left+"px";
+canvas.style.top = monaLisaSize.top+"px";
+
+var particles = [];
+
+canvas.onmousedown = function(e)
+{
+    for (var i = 0; i < 36 * 2; i++)
+    {
+        particles.push({
+            x: e.clientX - monaLisaSize.left,
+            y: e.clientY - monaLisaSize.top,
+            angle: i * 5,
+            size: 5 + Math.random() * 4,
+            life: 250 + Math.random() * 50
+        });
+    }
+}
+
+canvas.onmouseup = function()
+{
+    //ctx.clearRect(0, 0, 600, 600);
+}
+
+var delta = 0;
+var last = Date.now();
+
+function animate()
+{
+    delta = Date.now() - last;
+    last = Date.now();
+    for (var i = 0; i < particles.length; i++)
+    {
+        var p = particles[i];
+        p.x += Math.cos(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        p.y += Math.sin(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        p.life -= delta;
+        p.size -= delta / 75;
+        
+        if (p.size <= 0)
+        {
+            p.life = 0;
+        }
+        
+        if (p.life <= 0)
+        {
+            particles.splice(i--, 1);
+            continue;
+        }
+    }
+}
+
+function render()
+{
+    ctx.fillStyle = colorSelection;
+    for (var i = 0; i < particles.length; i++)
+    {
+        if (Math.random() < 0.1)
+        {
+            continue;
+        }
+        var p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+        ctx.fill();
+    }
+}
+
+// Tells browser you want to perform an animation and to update before the next repaint
+window.requestAnimFrame = (function(){
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function(callback){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+(function animloop(){
+    requestAnimFrame(animloop);
+    animate();
+    render();
+})();
+
+
+/*
 const particles = [];
 
+// Creates new particles on user click
 canvas.onmousedown = function(e){
-    for (i = 0; i < 36 * 2; i++){
+    for (let i = 0; i < 36 * 2; i++){
         particles.push({
             x: e.clientX,
             y: e.clientY,
@@ -177,52 +310,65 @@ canvas.onmousedown = function(e){
     }
 }
 
-canvas.onmouseup = function (){
-    // blank
-}
+let delta = 0;
+const last = Date.now();
 
-const delta = 0;
-const last = Date.now;
+function animate(){
+    delta = Date.now() - last; // calculates the time elapsed since the last frame
+    for (var i = 0; i < particles.length; i++){ //updates the particle's location, size, life
+        const particle = particles[i];
+        particle.x += Math.cos(particle.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        particle.y += Math.sin(particle.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        particle.life -= delta;
+        particle.size -= delta / 50;
 
-
-
-
-
-
-
-let colorSelection = "#FF0000"; // Default color is red
-const colorPicker = document.getElementById("color-picker");
-const hex = document.getElementById("hex"); // HEX text in color picker
-
-// Gets color from color picker
-colorPicker.addEventListener("input", function(){
-    colorSelection = colorPicker.value;
-    hex.innerHTML = colorPicker.value;
-    console.log(colorPicker.value);
-    }, false);
-
-const buttons = document.querySelectorAll(".button");
-
-
-buttons.forEach(button => {
-    button.addEventListener("click", function(){
-        activateButton(button.id);
-    })
-});
-
-const blowtorchButton = document.getElementById("blowtorch-button");
-
-function activateButton (buttonSelection){
-    if (buttonSelection == "blowtorch-button"){
-        activateBlowtorch();
+// Checks the life and size of each particle and removes ones with zero or negative values//
+        if (particle.size <= 0){
+            particle.life = 0;
+        }
+        if (particle.life <= 0){
+            particles.splice(i--, 1);
+            continue;
+        }
     }
 }
 
-function activateBlowtorch(){
-    blowtorchButton.classList.remove("blowtorch-icon");
-    blowtorchButton.classList.add("activate-blowtorch");
-    document.body.classList.add("blowtorch-cursor");
+// Draws the particles on the canvas
+function render(){
+    ctx.fillStyle = colorSelection;
+    for (let i = 0; i < particles.length; i++){
+        if (Math.random() < 0.1)
+        {
+            continue;
+        }
+        const particle = particles[i];
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2, false);
+        ctx.fill();
+    }
 }
+
+
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+
+(function animloop(){
+    requestAnimFrame(animloop);
+    animate();
+    render();
+})();
+
+
+
+
+*/
 
     
 
