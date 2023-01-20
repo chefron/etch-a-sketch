@@ -210,8 +210,16 @@ canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
 //canvas.style.left = monaLisaSize.left+"px";
 //canvas.style.top = monaLisaSize.top+"px"; */
 
+window.addEventListener("resize", function(){
+    canvas.width = window.innerWidth;
+    canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
+    copyCanvas();
+})
 
-
+function copyCanvas(){
+    var imgData = ctx.getImageData(1, 1, canvas.width, canvas.height);
+    ctx.putImageData(imgData);
+}
 
 var particles = [];
 
