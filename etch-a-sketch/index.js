@@ -205,74 +205,60 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const monaLisaSize = monaLisaContainer.getBoundingClientRect();
-console.log(monaLisaSize);
+canvas.width = window.innerWidth;
+canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
+//canvas.style.left = monaLisaSize.left+"px";
+//canvas.style.top = monaLisaSize.top+"px"; */
 
-canvas.width = monaLisaSize.width;
-canvas.height = monaLisaSize.height;
-canvas.style.left = monaLisaSize.left+"px";
-canvas.style.top = monaLisaSize.top+"px";
+
+
 
 var particles = [];
 
-canvas.onmousedown = function(e)
-{
-    for (var i = 0; i < 36 * 2; i++)
-    {
+// Creates new particles on user click
+canvas.onmousedown = function(e){
+    for (var i = 0; i < 50 * 2; i++){
         particles.push({
-            x: e.clientX - monaLisaSize.left,
-            y: e.clientY - monaLisaSize.top,
+            x: e.clientX,
+            y: e.clientY,
             angle: i * 5,
             size: 5 + Math.random() * 4,
-            life: 250 + Math.random() * 50
+            life: 300 + Math.random() * 100
         });
     }
-}
-
-canvas.onmouseup = function()
-{
-    //ctx.clearRect(0, 0, 600, 600);
 }
 
 var delta = 0;
 var last = Date.now();
 
-function animate()
-{
-    delta = Date.now() - last;
+function animate(){
+    delta = Date.now() - last; // Calculates the time elapsed since the last frame
     last = Date.now();
-    for (var i = 0; i < particles.length; i++)
-    {
-        var p = particles[i];
-        p.x += Math.cos(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
-        p.y += Math.sin(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
-        p.life -= delta;
-        p.size -= delta / 75;
+    for (var i = 0; i < particles.length; i++){ //updates the particle's location, size, life
+            var p = particles[i];
+            p.x += Math.cos(p.angle) * 9 + Math.random() * 4 - Math.random() * 2;
+            p.y += Math.sin(p.angle) * 9 + Math.random() * 4 - Math.random() * 2;
+            p.life -= delta;
+            p.size -= delta / 75;
         
-        if (p.size <= 0)
-        {
+    if (p.size <= 0){ // filter out non-existent particles
             p.life = 0;
         }
         
-        if (p.life <= 0)
-        {
+    if (p.life <= 0){
             particles.splice(i--, 1);
             continue;
         }
     }
 }
 
-function render()
-{
+// Draws the particles on the canvas
+function render() {
     ctx.fillStyle = colorSelection;
-    for (var i = 0; i < particles.length; i++)
-    {
-        if (Math.random() < 0.1)
-        {
-            continue;
-        }
+    for (var i = 0; i < particles.length; i++){
         var p = particles[i];
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+        ctx.ellipse(p.x, p.y, p.size, Math.random(p.size) * 7, 0, Math.PI * 2, false);
         ctx.fill();
     }
 }
@@ -287,11 +273,13 @@ window.requestAnimFrame = (function(){
         };
 })();
 
-(function animloop(){
+function animloop(){
     requestAnimFrame(animloop);
     animate();
     render();
-})();
+};
+
+animloop();
 
 
 /*
