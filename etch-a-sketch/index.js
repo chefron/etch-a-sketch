@@ -15,6 +15,7 @@ const buttons = document.querySelectorAll(".button");
 buttons.forEach(button => {
     button.addEventListener("click", function(){
         activateButton(button.id);
+        deactivateButton(button.id);
     })
 });
 
@@ -166,10 +167,16 @@ let isBlowtorchSelected = false;
 const blowtorchButton = document.getElementById("blowtorch-button");
 
 function activateButton (buttonSelection){
-    if (buttonSelection == "blowtorch-button"){
+    if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
         activateBlowtorch();
         isBlowtorchSelected = true;
-    }
+    } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
+        deactivateBlowtorch();
+        isBlowtorchSelected = false;
+    }}
+
+function deactivateButton(buttonSelection){
+
 }
 
 function activateBlowtorch(){
@@ -178,6 +185,11 @@ function activateBlowtorch(){
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
+function deactivateBlowtorch(){
+    //blowtorchButton.classList.remove("blowtorch-icon");
+    //blowtorchButton.classList.add("activate-blowtorch");
+    monaLisaContainer.style.setProperty("--cursor", "auto");
+}
 
 //records where user clicks on Mona Lisa with blowtorch cursor
 monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
@@ -205,21 +217,20 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const monaLisaSize = monaLisaContainer.getBoundingClientRect();
+
 canvas.width = window.innerWidth;
 canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
+
 //canvas.style.left = monaLisaSize.left+"px";
 //canvas.style.top = monaLisaSize.top+"px"; */
+
+    
 
 window.addEventListener("resize", function(){
     canvas.width = window.innerWidth;
     canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
-    copyCanvas();
 })
 
-function copyCanvas(){
-    var imgData = ctx.getImageData(1, 1, canvas.width, canvas.height);
-    ctx.putImageData(imgData);
-}
 
 var particles = [];
 
