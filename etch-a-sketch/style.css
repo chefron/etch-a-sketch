@@ -37,13 +37,13 @@ html, body {
 }
 
 .button:hover {
-    
+    scale: 1.05;
 }
 
 
 
 #swatch {
-    background: rgb(206, 206, 206);
+    background: rgb(245, 245, 245);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -123,7 +123,9 @@ input[type="color"]::-moz-color-swatch {
 .activate-button {
     border: 5px solid #00D024;
     background-color: rgb(245, 245, 245);
+    scale: 1.05;
 }
+
 
 #grid-button {
   width: 100%;
@@ -190,11 +192,9 @@ input[type="color"]::-moz-color-swatch {
 
 #mona-lisa-canvas {
     position: absolute;
-    z-index: 2;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: blue;
 }
 
 canvas {
@@ -226,11 +226,12 @@ canvas {
 }
 
 .square {
+    z-index: 1;
     flex: 1 1 auto;
     border: 1px none rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
     user-select: none;
-    z-index: 1;
+    border-style: dashed;   
 }
 
 .circle {
@@ -254,7 +255,7 @@ canvas {
     bottom: var(--bottom);
     border: var(--bor) solid rgb(249, 249, 255);
     border-radius: 50%;
-    animation: burn 15s ease-in forwards;
+    animation: burn 10s ease-in forwards;
 }
 
 @keyframes burn {

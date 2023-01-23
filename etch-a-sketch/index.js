@@ -21,7 +21,7 @@ buttons.forEach(button => {
 
 const slider = document.getElementById("slider");
 const grid = document.getElementById("grid");
-let isGridHidden = true;
+let isGridHidden = false;
 
 let numOfSquares = 100;
 
@@ -34,15 +34,13 @@ function populateGrid(){
         square.style.width = `${(100/(Math.sqrt(numOfSquares))) + "%"}`;
         grid.appendChild(square);
     }
-    squares = document.querySelectorAll(".square");
-    for (let i = 0; i < numOfSquares; i++){
-        squares[i].style.borderStyle = "none"};
 }
 
 populateGrid();
 
 let mouseDown = false;
 
+squares = document.querySelectorAll(".square");
 
 function assignEventListeners(){
     for (let i = 0; i < numOfSquares; i++){
@@ -66,7 +64,7 @@ document.addEventListener("mouseup", function(){
 function paint(i){
     let squares = document.querySelectorAll(".square");
     return function(){
-        if (mouseDown){
+        if (mouseDown && !isGridHidden){
         squares[i].style.backgroundColor = colorSelection;
         }
     };
@@ -107,31 +105,32 @@ function repopulateGrid(){
 
     if (isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
-            squares[i].style.borderStyle = "none"};
+            squares[i].style.borderStyle = "none";
+            squares[i].style.zIndex = "0"};
         }
     if (!isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
-            squares[i].style.borderStyle = "dashed"};
+            squares[i].style.borderStyle = "dashed";
+            squares[i].style.zIndex = "1"};
         }
-
+    
     assignEventListeners();
 }
 
-
-
 const gridButton = document.getElementById("grid-button");
-
 gridButton.addEventListener("click", toggleGrid);
 
 function toggleGrid(){
     let squares = document.querySelectorAll(".square");
     if (isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
+                squares[i].style.zIndex = "1";
                 squares[i].style.borderStyle = "dashed"};
         console.log("show grid");
         
     } else {
         for (let i = 0; i < numOfSquares; i++){
+                squares[i].style.zIndex = "0";
                 squares[i].style.borderStyle = "none"};
         console.log("hide grid");
       
@@ -152,24 +151,42 @@ let isBlowtorchSelected = false;
 const blowtorchButton = document.getElementById("blowtorch-button");
 let isSplatterSelected = false;
 const splatterButton = document.getElementById("splatter-button");
+let isGridSelected = true;
+const gridButtonWrapper = document.getElementById("grid-button-wrapper");
+
+
 
 function activateButton (buttonSelection){
     if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
         activateBlowtorch();
         deactivateSplatter();
+        deactivateGrid();
         isBlowtorchSelected = true;
         isSplatterSelected = false;
+        isGridSelected = false;
     } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
         deactivateBlowtorch();
         isBlowtorchSelected = false;
     } else if ((buttonSelection == "splatter-button") && !isSplatterSelected){
         activateSplatter();
         deactivateBlowtorch();
+        deactivateGrid();
         isSplatterSelected = true;
         isBlowtorchSelected = false;
+        isGridSelected = false;
     } else if ((buttonSelection == "splatter-button") && (isSplatterSelected)){
         deactivateSplatter();
         isSplatterSelected = false;
+    } else if ((buttonSelection == "grid-button-wrapper") && !isGridSelected){
+        activateGrid();
+        deactivateBlowtorch();
+        deactivateSplatter();
+        isSplatterSelected = false;
+        isBlowtorchSelected = false;
+        isGridSelected = true;
+    } else if ((buttonSelection == "grid-button-wrapper") && (isGridSelected)){
+        deactivateGrid();
+        isGridSelected = false;
     }
 
 }
@@ -187,7 +204,6 @@ function activateBlowtorch(){
 function deactivateBlowtorch(){
     blowtorchButton.classList.remove("activate-button");
     blowtorchButton.classList.add("blowtorch-icon");
-    monaLisaContainer.style.setProperty("--cursor", "auto");
 }
 
 function activateSplatter(){
@@ -199,9 +215,21 @@ function activateSplatter(){
 function deactivateSplatter(){
     splatterButton.classList.remove("activate-button");
     splatterButton.classList.add("splatter-icon");
-    monaLisaContainer.style.setProperty("--cursor", "auto");
 }
 
+function activateGrid(){
+    gridButtonWrapper.classList.remove("grid-icon");
+    gridButtonWrapper.classList.add("activate-button");
+}
+
+function deactivateGrid(){
+    gridButtonWrapper.classList.remove("activate-button");
+    gridButtonWrapper.classList.add("grid-icon");
+    if (!isGridHidden){
+        toggleGrid();
+        isGridHidden = true;
+    }
+}
 
 
 
@@ -210,19 +238,23 @@ monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
     if (isBlowtorchSelected){
     const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
     console.log(dimensions);
+    console.log(e.clientY);
     const left = e.clientX - dimensions.left; // x position within element
     const right = dimensions.width - left;
     const top = e.clientY - dimensions.top; // y position within element
     const bottom = dimensions.height - top;
     console.log(left, right, top, bottom);
-    
-    monaLisaContainer.style.setProperty("--left", `${left}px`);
-    monaLisaContainer.style.setProperty("--right", `${right}px`);
-    monaLisaContainer.style.setProperty("--top", `${top}px`);
-    monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-    const div = document.createElement("div");
-    div.className = "circle";
-    monaLisaContainer.appendChild(div);
+
+    if (e.clientX > dimensions.left && e.clientX < dimensions.right // Checks if user clicks within Mona Lisa
+        && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
+            monaLisaContainer.style.setProperty("--left", `${left}px`);
+            monaLisaContainer.style.setProperty("--right", `${right}px`);
+            monaLisaContainer.style.setProperty("--top", `${top}px`);
+            monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+            const div = document.createElement("div");
+            div.className = "circle";
+            monaLisaContainer.appendChild(div);
+    }
 }};
 
 //PAINT SPLATTER:
