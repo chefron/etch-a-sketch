@@ -33,18 +33,17 @@ html, body {
     font-family: Verdana, Geneva, Tahoma, Arial, Helvetica, sans-serif;
     font-size: 1vw;
     border-radius: 7%;
-    filter: brightness(110%);
+    
 }
 
 .button:hover {
-    box-shadow: 0 0 .7vw .2vw  #060d18;
-    transform: translateY(-5%) scale(1.05);
+    
 }
 
 
 
 #swatch {
-    background: rgb(250, 250, 250);
+    background: rgb(206, 206, 206);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -108,29 +107,26 @@ input[type="color"]::-moz-color-swatch {
     align-items: center;
 }
 
-.grid-icon-wrapper {
+.grid-icon {
     position: relative;
-    background: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%), 
-                linear-gradient(to right top, #aaaaaa 0%, #8f8f8f 44%, #696969 100%);
+    background: #ac5c2c;
 }
 
 .blowtorch-icon {
-    background: 
-        radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%), 
-        linear-gradient(to right top, #a90329 0%, #8f0222 44%, #690019 100%);
+    background: #c8a353;
 }
 
-.activate-blowtorch {
-    border: 5px solid #98fb98;
-    background: 
-        radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%), 
-        whitesmoke;
+.splatter-icon {
+    background: #897846;
 }
 
-#grid-icon {
-   
+.activate-button {
+    border: 5px solid #00D024;
+    background-color: rgb(245, 245, 245);
+}
+
+#grid-button {
   width: 100%;
-    
 }
 
 /*.icon:hover {
@@ -148,6 +144,7 @@ input[type="color"]::-moz-color-swatch {
     font-size: 2vw;
     font-weight: 600;
     white-space: nowrap;
+    pointer-events: none;
 }
 
 #grid-icon-wrapper h2 {
@@ -202,7 +199,6 @@ input[type="color"]::-moz-color-swatch {
 
 canvas {
     position: fixed;
-    
     left: 0;
     right: 0;
     top: 0;
@@ -217,14 +213,6 @@ canvas {
     outline: 5px solid #d4af37;
     outline-offset: -5px;
     filter: brightness(110%);
-    animation: portrait-burn 15s linear forwards;
-}
-
-@keyframes portrait-burn {
-    0%   {filter: brightness(100%);}     
-    75%  {filter: brightness(100%);}
-    90%  {filter: brightness(75%);}
-    100% {filter: brightness(65%);}
 }
 
 #grid {
@@ -242,6 +230,7 @@ canvas {
     border: 1px none rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
     user-select: none;
+    z-index: 1;
 }
 
 .circle {

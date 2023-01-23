@@ -117,26 +117,11 @@ function repopulateGrid(){
     assignEventListeners();
 }
 
-const gridIconWrapper = document.querySelector(".grid-icon-wrapper");
-const gridIconText = document.getElementById("cross-out");
 
 
-function hightlightIcon(){
-    gridIconWrapper.style.opacity = "100%";
-    gridIconWrapper.style.background = "rgba(255, 255, 255, 1)";
- //   gridIconText.innerHTML = "GRID ON";
-}
+const gridButton = document.getElementById("grid-button");
 
-function dehighlightIcon(){
-    gridIconWrapper.style.opacity = "initial";
-    gridIconWrapper.style.background = "initial";
- //   gridIconText.innerHTML = "GRID OFF";
-}
-
-const gridIcon = document.getElementById("grid-icon");
-
-
-gridIcon.addEventListener("click", toggleGrid);
+gridButton.addEventListener("click", toggleGrid);
 
 function toggleGrid(){
     let squares = document.querySelectorAll(".square");
@@ -144,12 +129,12 @@ function toggleGrid(){
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "dashed"};
         console.log("show grid");
-        hightlightIcon();
+        
     } else {
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "none"};
         console.log("hide grid");
-        dehighlightIcon();
+      
     }; 
     isGridHidden = !isGridHidden;
 }
@@ -165,15 +150,29 @@ const monaLisaContainer = document.getElementById("mona-lisa-container");
 
 let isBlowtorchSelected = false;
 const blowtorchButton = document.getElementById("blowtorch-button");
+let isSplatterSelected = false;
+const splatterButton = document.getElementById("splatter-button");
 
 function activateButton (buttonSelection){
     if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
         activateBlowtorch();
+        deactivateSplatter();
         isBlowtorchSelected = true;
+        isSplatterSelected = false;
     } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
         deactivateBlowtorch();
         isBlowtorchSelected = false;
-    }}
+    } else if ((buttonSelection == "splatter-button") && !isSplatterSelected){
+        activateSplatter();
+        deactivateBlowtorch();
+        isSplatterSelected = true;
+        isBlowtorchSelected = false;
+    } else if ((buttonSelection == "splatter-button") && (isSplatterSelected)){
+        deactivateSplatter();
+        isSplatterSelected = false;
+    }
+
+}
 
 function deactivateButton(buttonSelection){
 
@@ -181,15 +180,30 @@ function deactivateButton(buttonSelection){
 
 function activateBlowtorch(){
     blowtorchButton.classList.remove("blowtorch-icon");
-    blowtorchButton.classList.add("activate-blowtorch");
+    blowtorchButton.classList.add("activate-button");
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
 function deactivateBlowtorch(){
-    //blowtorchButton.classList.remove("blowtorch-icon");
-    //blowtorchButton.classList.add("activate-blowtorch");
+    blowtorchButton.classList.remove("activate-button");
+    blowtorchButton.classList.add("blowtorch-icon");
     monaLisaContainer.style.setProperty("--cursor", "auto");
 }
+
+function activateSplatter(){
+    splatterButton.classList.remove("splatter-icon");
+    splatterButton.classList.add("activate-button");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
+}
+
+function deactivateSplatter(){
+    splatterButton.classList.remove("activate-button");
+    splatterButton.classList.add("splatter-icon");
+    monaLisaContainer.style.setProperty("--cursor", "auto");
+}
+
+
+
 
 //records where user clicks on Mona Lisa with blowtorch cursor
 monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
@@ -236,16 +250,19 @@ var particles = [];
 
 // Creates new particles on user click
 canvas.onmousedown = function(e){
-    for (var i = 0; i < 50 * 2; i++){
-        particles.push({
-            x: e.clientX,
-            y: e.clientY,
-            angle: i * 5,
-            size: 5 + Math.random() * 4,
-            life: 300 + Math.random() * 100
-        });
+    if (isSplatterSelected){
+        for (var i = 0; i < 50 * 2; i++){
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                angle: i * 5,
+                size: 5 + Math.random() * 4,
+                life: 300 + Math.random() * 100
+            });
+        }
     }
 }
+
 
 var delta = 0;
 var last = Date.now();
