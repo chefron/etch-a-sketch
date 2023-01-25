@@ -288,6 +288,24 @@ canvas {
     }
 }
 
+#site-info-wrapper {
+    position: absolute;
+    display: block;
+    right: 0;
+    bottom: 0;
+    font-family: 'MonteCarlo', cursive;
+    color: #f5ca3e;
+    font-size: 2.5vmax;
+    font-weight: 600;
+    width: auto;
+    height: fit-content;
+    
+}
+
+#site-info {
+    margin: 0;
+    padding-right: 1vw;
+}
 
 /*@keyframes burn {
     0%   {top: 0%;
