@@ -196,35 +196,35 @@ function deactivateButton(buttonSelection){
 }
 
 function activateBlowtorch(){
-    blowtorchButton.classList.remove("blowtorch-icon");
-    blowtorchButton.classList.add("activate-button");
+    blowtorchButton.classList.remove("unselected");
+    blowtorchButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
 function deactivateBlowtorch(){
-    blowtorchButton.classList.remove("activate-button");
-    blowtorchButton.classList.add("blowtorch-icon");
+    blowtorchButton.classList.remove("selected");
+    blowtorchButton.classList.add("unselected");
 }
 
 function activateSplatter(){
-    splatterButton.classList.remove("splatter-icon");
-    splatterButton.classList.add("activate-button");
+    splatterButton.classList.remove("unselected");
+    splatterButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
 function deactivateSplatter(){
-    splatterButton.classList.remove("activate-button");
-    splatterButton.classList.add("splatter-icon");
+    splatterButton.classList.remove("selected");
+    splatterButton.classList.add("unselected");
 }
 
 function activateGrid(){
-    gridButtonWrapper.classList.remove("grid-icon");
-    gridButtonWrapper.classList.add("activate-button");
+    gridButtonWrapper.classList.remove("unselected");
+    gridButtonWrapper.classList.add("selected");
 }
 
 function deactivateGrid(){
-    gridButtonWrapper.classList.remove("activate-button");
-    gridButtonWrapper.classList.add("grid-icon");
+    gridButtonWrapper.classList.remove("selected");
+    gridButtonWrapper.classList.add("unselected");
     if (!isGridHidden){
         toggleGrid();
         isGridHidden = true;

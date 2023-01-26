@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=MonteCarlo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap" rel="stylesheet">
 
 
 </head>
@@ -24,9 +25,9 @@
         
         <div id="title">
 
-            <img id="deface" src="images/DEFACE.png"/>
+            <p id="deface">Deface</p>
         
-            <h1>The Mona Lisa</h1>
+            <p id="mona-lisa-title">The Mona Lisa</p>
 
         </div>
 
@@ -71,7 +72,7 @@
 
         <div id="toolbox">
 
-            <div id="swatch" class="button">
+            <div id="swatch" class="button unselected">
 
                 <input type="color" id="color-picker" value="#963A2F"></input>
 
@@ -81,9 +82,21 @@
 
             </div>
 
+            <div id="blowtorch-button" class="button unselected">
+
+                <img id="blowtorch" src="images/blowtorch-icon.png">
+
+            </div>
+
+            <div id="splatter-button" class="button unselected">
+
+                <img id="splatter" src="images/splash.png">
+
+            </div>
+
             <div id="grid-options-container">
 
-                <div id="grid-button-wrapper" class="activate-button button">
+                <div id="grid-button-wrapper" class="button selected">
 
                     <img id="grid-button" src="images/grid-icon.png">
 
@@ -94,18 +107,6 @@
                 </div>
 
                 <input type="range" id="slider" min="1" max="1000" value="100"></input> 
-
-            </div>
-
-            <div id="blowtorch-button-wrapper">
-
-                <img id="blowtorch-button" class="blowtorch-icon button" src="images/blowtorch-icon.png">
-
-            </div>
-
-            <div id="splatter-button-wrapper">
-
-                <img id="splatter-button" class="splatter-icon button" src="images/splash.png">
 
             </div>
 

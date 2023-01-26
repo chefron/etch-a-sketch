@@ -1,6 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=MonteCarlo&display=swap');
 
+@font-face {
+    font-family: 'a Attack Graffiti';
+    src: url('fonts/aAttackGraffiti.eot');
+    src: url('fonts/aAttackGraffiti.eot?#iefix') format('embedded-opentype'),
+         url('fonts/aAttackGraffiti.woff2') format('woff2'),
+         url('fonts/aAttackGraffiti.woff') format('woff'),
+         url('fonts/aAttackGraffiti.ttf')  format('truetype'),
+         url('fonts/aAttackGraffiti.svg#a Attack Graffiti') format('svg');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
+
 html, body {
     width: 100%;
     height: 100%;
@@ -29,47 +41,72 @@ html, body {
 }
 
 #title {
+    flex: 0 1 auto;
 }
 
 #deface {
-    display: block;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 3%;
-    margin-bottom: -9%;
-    transform: translateX(3%);
+    position: relative;
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-size: 7vmax;
+    margin: 5% auto -13.5% auto;
+    text-align: center;
+    z-index: 1;
+    transform: rotate(3deg);
+    color: #eb0000;
+
+    text-shadow:
+    3px 3px 0 rgb(0, 0, 0),
+    -3px -3px 0 rgb(0, 0, 0),
+     -1px -1px 0 rgb(0, 0, 0),
+      1px -1px 0 rgb(0, 0, 0),
+      -1px 1px 0 rgb(0, 0, 0),
+       1px 1px 0 rgb(0, 0, 0);
+ 
 }
 
-h1 {
+#mona-lisa-title {
+    position: relative;
     font-family: 'Cormorant Garamond', serif;
+    font-size: 4vmax;
     color: white;
     text-align: center;
     font-weight: 300;
-    margin-bottom: 0;
+    margin: 0 auto 0 auto;
     text-shadow: 2px 2px 2px black;
+    z-index: 0;
 }
 
 .button {
     position: relative;
-    width: 12vw;
-    height: 12vw;
+    width: 10vmax;
+    height: 10vmax;
     margin: 2.5vw;
     font-family: 'MonteCarlo', cursive;
     font-size: 1vw;
-    border-radius: 7%;
-    box-shadow: 1vw 1vw 2vw 0 rgba(0, 0, 0, 0.9);
-    filter: contrast(120%);
+    border-radius: 25%;
+    border: 4px solid #eb0000;
+    background-color :rgb(240, 240, 240);
+    background-image: url("https://www.transparenttextures.com/patterns/brick-wall.png");
+    overflow: hidden;
 }
 
 .button:hover {
-    scale: 1.05;
+    scale: 1.15;
+}
+
+.unselected {
+    box-shadow: 1vmin 1vmin 2vmin rgba(0, 0, 0, 0.9);
+}
+
+.selected {
+    filter: invert(100%);
+    scale: 1.15;
+   
 }
 
 
 
 #swatch {
-    background-image: url(images/subtle-white-feathers.png), linear-gradient(#f0f0f0, #9c9c9c);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -88,7 +125,6 @@ h1 {
 
 #swatch .info {
     text-align: center;
-    margin-top: 1%;
     
     
 }
@@ -96,25 +132,26 @@ h1 {
 input[type="color"] {
     appearance: none;
     background: none;
-    border: 1px solid transparent;
-    width: 100%;
-    height: 80%;
+    width: 94%;
+    height: 84%;
     padding: 0;
     outline: none;
     -webkit-appearance: none;
-    border-radius: 7%;
+    border: none;
+    margin: auto auto 0 auto;
+
     
 }
 
 input[type="color"]::-webkit-color-swatch {
-    border: 3px solid transparent;
-    border-radius: 7%;
+    border: 4px solid transparent;
+    border-radius: 25% 25% 5% 5%;
     padding: 0;
 }
 
 input[type="color"]::-moz-color-swatch {
-    border: 3px solid transparent;
-    border-radius: 7%;
+    border: 4px solid transparent;
+    border-radius: 25% 25% 3% 3%;
     padding: 0;
 }
 
@@ -134,24 +171,26 @@ input[type="color"]::-moz-color-swatch {
 }
 
 .grid-icon {
-    background-image: url(images/subtle-white-feathers.png), linear-gradient(#a9a569, #706d43);
+    
 }
 
-.blowtorch-icon {
-    background-image: url(images/subtle-white-feathers.png), linear-gradient(#c8a353, #79602c);
+
+#blowtorch-button {
+    
 }
 
-.splatter-icon {
-    background-image: url(images/subtle-white-feathers.png), linear-gradient(#8d889b, #5d5966);
+#blowtorch {
+    width: 100%;
+    height: 100%;
 }
 
-.activate-button {
-    border: 5px solid #d4af37;
-    background-image: url(images/subtle-white-feathers.png), linear-gradient(#f0f0f0, #949494);
-    box-shadow: 
-        inset 6px 6px 10px 0 rgba(0, 0, 0, 0.2),
-        inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5);
-    scale: 1.05;
+#splatter-button {
+    
+}
+
+#splatter {
+    width: 100%;
+    height: 100%;
 }
 
 #grid-button {
@@ -193,7 +232,7 @@ input[type="color"]::-moz-color-swatch {
 }
 
 #slider {
-    width: 70%;
+    width: 65%;
 }
 
 #mona-lisa-container {
@@ -202,7 +241,7 @@ input[type="color"]::-moz-color-swatch {
     max-width: 330px;
     height: auto;
     user-select: none;
-    margin-top: 4vmin;
+    margin-top: 3vmin;
     margin-bottom: 4vmin;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
     overflow: hidden;
