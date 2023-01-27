@@ -13,6 +13,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap');
+
 html, body {
     width: 100%;
     height: 100%;
@@ -53,7 +55,6 @@ html, body {
     z-index: 1;
     transform: rotate(3deg);
     color: #eb0000;
-
     text-shadow:
     3px 3px 0 rgb(0, 0, 0),
     -3px -3px 0 rgb(0, 0, 0),
@@ -81,8 +82,6 @@ html, body {
     width: 10vmax;
     height: 10vmax;
     margin: 2.5vw;
-    font-family: 'MonteCarlo', cursive;
-    font-size: 1vw;
     border-radius: 25%;
     border: 4px solid #eb0000;
     background-color :rgb(240, 240, 240);
@@ -120,12 +119,13 @@ html, body {
 
 #swatch h2 {
     margin: 0;
-    font-weight: 600;
 }
 
 #swatch .info {
     text-align: center;
-    
+    font-family: 'Sedgwick Ave', cursive;
+    font-size: 1.3vmax;
+    font-weight: 600;
     
 }
 
@@ -175,20 +175,9 @@ input[type="color"]::-moz-color-swatch {
 }
 
 
-#blowtorch-button {
-    
-}
 
-#blowtorch {
-    width: 100%;
-    height: 100%;
-}
 
-#splatter-button {
-    
-}
-
-#splatter {
+#splatter, #blowtorch, #eraser {
     width: 100%;
     height: 100%;
 }
@@ -209,13 +198,14 @@ input[type="color"]::-moz-color-swatch {
 
 #square-count {
     position: absolute;
+    font-family: 'Sedgwick Ave', cursive;
+    font-size: 1.8vmax;
+    font-weight: 600;
     color: black;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);  
+    transform: translate(-50%, -40%);  
     margin: 0;
-    font-size: 2vw;
-    font-weight: 600;
     white-space: nowrap;
     pointer-events: none;
 }

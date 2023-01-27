@@ -5,7 +5,7 @@ const hex = document.getElementById("hex"); // HEX text in color picker
 // Gets color from color picker
 colorPicker.addEventListener("input", function(){
     colorSelection = colorPicker.value;
-    hex.innerHTML = colorPicker.value;
+  /*  hex.innerHTML = colorPicker.value; */
     console.log(colorPicker.value);
     }, false);
 
@@ -15,7 +15,6 @@ const buttons = document.querySelectorAll(".button");
 buttons.forEach(button => {
     button.addEventListener("click", function(){
         activateButton(button.id);
-        deactivateButton(button.id);
     })
 });
 
@@ -85,6 +84,7 @@ slider.addEventListener("change", function(){
     getNumberOfSquares();
 });
 
+
 function getNumberOfSquares(){
     const squareCount = document.getElementById("square-count")
     squareCount.innerHTML = `${Math.sqrt(numOfSquares)} &#215 ${Math.sqrt(numOfSquares)}`;
@@ -153,17 +153,21 @@ let isSplatterSelected = false;
 const splatterButton = document.getElementById("splatter-button");
 let isGridSelected = true;
 const gridButtonWrapper = document.getElementById("grid-button-wrapper");
+let isEraserSelected = false;
+const eraserButton = document.getElementById("eraser-button");
 
 
 
-function activateButton (buttonSelection){
+function activateButton(buttonSelection){
     if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
         activateBlowtorch();
         deactivateSplatter();
         deactivateGrid();
+        deactivateEraser();
         isBlowtorchSelected = true;
         isSplatterSelected = false;
         isGridSelected = false;
+        isEraserSelected = false;
     } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
         deactivateBlowtorch();
         isBlowtorchSelected = false;
@@ -171,9 +175,11 @@ function activateButton (buttonSelection){
         activateSplatter();
         deactivateBlowtorch();
         deactivateGrid();
+        deactivateEraser();
         isSplatterSelected = true;
         isBlowtorchSelected = false;
         isGridSelected = false;
+        isEraserSelected = false;
     } else if ((buttonSelection == "splatter-button") && (isSplatterSelected)){
         deactivateSplatter();
         isSplatterSelected = false;
@@ -181,19 +187,29 @@ function activateButton (buttonSelection){
         activateGrid();
         deactivateBlowtorch();
         deactivateSplatter();
+        deactivateEraser();
         isSplatterSelected = false;
         isBlowtorchSelected = false;
         isGridSelected = true;
+        isEraserSelected = false;
     } else if ((buttonSelection == "grid-button-wrapper") && (isGridSelected)){
         deactivateGrid();
         isGridSelected = false;
+    } else if ((buttonSelection == "eraser-button") && !isEraserSelected){
+        deactivateGrid();
+        deactivateBlowtorch();
+        deactivateSplatter();
+        activateEraser();
+        isSplatterSelected = false;
+        isBlowtorchSelected = false;
+        isGridSelected = false;
+        isEraserSelected = true;
+    } else if ((buttonSelection == "eraser-button") && (isEraserSelected)){
+        deactivateEraser();
+        isEraserSelected = false;
     }
-
 }
 
-function deactivateButton(buttonSelection){
-
-}
 
 function activateBlowtorch(){
     blowtorchButton.classList.remove("unselected");
@@ -204,6 +220,17 @@ function activateBlowtorch(){
 function deactivateBlowtorch(){
     blowtorchButton.classList.remove("selected");
     blowtorchButton.classList.add("unselected");
+}
+
+function activateSplatter(){
+    splatterButton.classList.remove("unselected");
+    splatterButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
+}
+
+function deactivateSplatter(){
+    splatterButton.classList.remove("selected");
+    splatterButton.classList.add("unselected");
 }
 
 function activateSplatter(){
@@ -231,10 +258,21 @@ function deactivateGrid(){
     }
 }
 
+function activateEraser(){
+    eraserButton.classList.remove("unselected");
+    eraserButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png"), auto`);
+    /*resetCanvas();*/
+}
 
+function deactivateEraser(){
+    eraserButton.classList.remove("selected");
+    eraserButton.classList.add("unselected");
+    context.globalCompositeOperation = 'source-over';
+}
 
 //records where user clicks on Mona Lisa with blowtorch cursor
-monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
+monaLisaContainer.onclick = function (e){ // e is a mouse click event
     if (isBlowtorchSelected){
     const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
     console.log(dimensions);
@@ -260,7 +298,7 @@ monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
 //PAINT SPLATTER:
 
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const context = canvas.getContext("2d");
 
 const monaLisaSize = monaLisaContainer.getBoundingClientRect();
 
@@ -304,8 +342,8 @@ function animate(){
     last = Date.now();
     for (var i = 0; i < particles.length; i++){ //updates the particle's location, size, life
             var p = particles[i];
-            p.x += Math.cos(p.angle) * 9 + Math.random() * 4 - Math.random() * 2;
-            p.y += Math.sin(p.angle) * 9 + Math.random() * 4 - Math.random() * 2;
+            p.x += Math.cos(p.angle) * 6 + Math.random() * 4 - Math.random() * 2;
+            p.y += Math.sin(p.angle) * 6 + Math.random() * 4 - Math.random() * 2;
             p.life -= delta;
             p.size -= delta / 75;
         
@@ -322,12 +360,12 @@ function animate(){
 
 // Draws the particles on the canvas
 function render() {
-    ctx.fillStyle = colorSelection;
+    context.fillStyle = colorSelection;
     for (var i = 0; i < particles.length; i++){
         var p = particles[i];
-        ctx.beginPath();
-        ctx.ellipse(p.x, p.y, p.size, Math.random(p.size) * 7, 0, Math.PI * 2, false);
-        ctx.fill();
+        context.beginPath();
+        context.ellipse(p.x, p.y, p.size, Math.random(p.size) * 7, 0, Math.PI * 2, false);
+        context.fill();
     }
 }
 
@@ -349,6 +387,59 @@ function animloop(){
 
 animloop();
 
+
+//ERASER:
+
+function erase(){
+context.globalCompositeOperation = "destination-out";
+}
+
+
+
+monaLisaContainer.onclick = function clickEvent(e){ // e is a mouse click event
+    if (isEraserSelected){
+        erase();
+    }
+}
+
+
+//RESET CANVAS:
+
+const resetCanvas = () => context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+//SHARPIE:
+
+context.lineWidth = 4;
+
+const changeWidth = value => context.lineWidth = value;
+
+let isDrawing = false;
+
+const startDrawing = (e) => {
+    isDrawing = true;
+    context.beginPath();
+    context.moveTo(e.clientX, e.clientY);
+}
+
+const stopDrawing = () => {
+    isDrawing = false;
+}
+
+const draw = (e) => {
+    if (!isDrawing) return; // end function if now drawing
+    context.lineTo(e.clientX, e.clientY);
+    context.stroke();
+}
+
+const enterCanvas = (e) => {
+    context.beginPath();
+}
+
+window.addEventListener("mousedown", startDrawing);
+window.addEventListener("mouseup", stopDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mouseover", enterCanvas);
 
 /*
 const particles = [];
