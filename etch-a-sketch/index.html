@@ -23,106 +23,109 @@
 
     <div id="flex-container">
         
-        <div id="title">
-
+        <header>
             <p id="deface">Deface</p>
-        
             <p id="mona-lisa-title">The Mona Lisa</p>
+        </header>
 
-        </div>
-
-        <div id="mona-lisa-container" draggable="false">
-
-            
-
-            <img id="mona-lisa" src="images/mona-lisa.jpg" draggable="false"/>
+        
 
             
 
-            <div id="grid" draggable="false">
-            </div>
 
-            <canvas id="canvas"></canvas>  
+            <div id="mona-lisa-container" draggable="false">
 
-            <svg>
+                <img id="mona-lisa" src="images/mona-lisa.jpg" draggable="false"/>
 
-                <filter id="wavy">
+                <div id="grid" draggable="false"></div>
 
-                    <feTurbulence 
-                        x="0" 
-                        y="0"
-                        basefrequency="0.2"
-                        numOctaves="4">
-                    
-                        <animate
-                            attributeName="baseFrequency"
-                            dur="30s"
-                            values="0.02; 0.005; 0.02"
-                            repeatCount="indefinite">
+                <canvas id="canvas"></canvas>  
+
+                <svg>
+
+                    <filter id="wavy">
+
+                        <feTurbulence 
+                            x="0" 
+                            y="0"
+                            basefrequency="0.2"
+                            numOctaves="4">
                         
-                    </feTurbulence>
+                            <animate
+                                attributeName="baseFrequency"
+                                dur="30s"
+                                values="0.02; 0.005; 0.02"
+                                repeatCount="indefinite">
+                            
+                        </feTurbulence>
 
-                        <feDisplacementMap in="SourceGraphic" scale="30">
+                            <feDisplacementMap in="SourceGraphic" scale="30">
 
-                </filter>
+                    </filter>
 
-            </svg>
-
-        </div>
-
-        <div id="toolbox">
-
-            <div id="swatch" class="button unselected">
-
-                <input type="color" id="color-picker" value="#963A2F"></input>
-
-                <div class="info">
-                    <h2 id="hex">COLOR</h2>
-                </div>
+                </svg>
 
             </div>
 
-            <div id="pen-button" class="button selected">
+            <div id="toolbox">
 
-                <img id="pen" src="images/pen-icon.png">
+                <div id="swatch" class="button unselected">
 
-            </div>
+                    <input type="color" id="color-picker" value="#963A2F"></input>
 
-            <div id="blowtorch-button" class="button unselected">
-
-                <img id="blowtorch" src="images/blowtorch-icon.png">
-
-            </div>
-
-            <div id="splatter-button" class="button unselected">
-
-                <img id="splatter" src="images/splash.png">
-
-            </div>
-
-            <div id="grid-options-container">
-
-                <div id="grid-button-wrapper" class="button unselected">
-
-                    <img id="grid-button" src="images/grid-icon.png">
-
-                    <p id="square-count"></p>
-
-                   <!-- <h2>GRID OFF</h2> -->
+                    <div class="info">
+                        <h2 id="hex">COLOR</h2>
+                    </div>
 
                 </div>
 
-                <input type="range" id="slider" min="1" max="1000" value="100"></input> 
+                <div id="pen-button" class="button selected">
+
+                    <img id="pen" src="images/pen-icon.png">
+
+                </div>
+
+                <div id="eraser-button" class="button unselected">
+
+                    <img id="eraser" src="images/eraser-black.png">
+
+                </div>
+
+                <div id="splatter-button" class="button unselected">
+
+                    <img id="splatter" src="images/splash.png">
+
+                </div>
+
+                <div id="blowtorch-button" class="button unselected">
+
+                    <img id="blowtorch" src="images/blowtorch-icon.png">
+
+                </div>
+
+               
+
+                <div id="grid-options-container">
+
+                    <div id="grid-button-wrapper" class="button unselected">
+
+                        <img id="grid-button" src="images/grid-icon.png">
+
+                        <p id="square-count"></p>
+
+                    <!-- <h2>GRID OFF</h2> -->
+
+                    </div>
+
+                    <input type="range" id="slider" min="1" max="1000" value="100"></input> 
+
+                </div>
+
+            
 
             </div>
 
-            <div id="eraser-button" class="button unselected">
-
-                <img id="eraser" src="images/eraser-black.png">
-
-            </div>
-
-        </div>
+       
 
     </div>
 

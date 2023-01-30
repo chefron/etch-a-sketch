@@ -40,14 +40,16 @@ function populateGrid(){
 
     if (isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
-            squares[i].style.borderStyle = "none";
-            squares[i].style.zIndex = "0"};
-        }
+                squares[i].style.borderStyle = "none";
+                squares[i].style.zIndex = "0";
+            };
+    }
     if (!isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
-            squares[i].style.borderStyle = "dashed";
-            squares[i].style.zIndex = "1"};
-        }
+                squares[i].style.borderStyle = "dashed";
+                squares[i].style.zIndex = "1";
+            };
+    }
 }
 
 
@@ -57,9 +59,10 @@ populateGrid();
 
 let mouseDown = false;
 
-squares = document.querySelectorAll(".square");
+
 
 function assignEventListeners(){
+    squares = document.querySelectorAll(".square");
     for (let i = 0; i < numOfSquares; i++){
         squares[i].addEventListener("mousedown", function(){
             mouseDown = true;
