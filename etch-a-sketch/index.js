@@ -18,7 +18,7 @@ buttons.forEach(button => {
     })
 });
 
-const slider = document.getElementById("slider");
+const gridSlider = document.getElementById("grid-slider");
 const grid = document.getElementById("grid");
 let isGridHidden = true;
 
@@ -102,12 +102,10 @@ function clearGrid(){
 }
  
 
-slider.addEventListener("change", function(){
-    numOfSquares = Math.pow(Math.round(Math.sqrt(slider.value)), 2);
+gridSlider.addEventListener("input", function(){
+    numOfSquares = Math.pow(Math.round(Math.sqrt(gridSlider.value)), 2); // returns slider value squared
     clearGrid();
-    setTimeout(function(){
-        repopulateGrid();
-    },10);
+    repopulateGrid();
     getNumberOfSquares();
 });
 
@@ -175,6 +173,9 @@ function toggleGrid(){
 
 const monaLisaContainer = document.getElementById("mona-lisa-container");
 
+
+let isPenSelected = true;
+const penButton = document.getElementById("pen-button");
 let isBlowtorchSelected = false;
 const blowtorchButton = document.getElementById("blowtorch-button");
 let isSplatterSelected = false;
@@ -183,8 +184,7 @@ let isGridSelected = false;
 const gridButtonWrapper = document.getElementById("grid-button-wrapper");
 let isEraserSelected = false;
 const eraserButton = document.getElementById("eraser-button");
-let isPenSelected = true;
-const penButton = document.getElementById("pen-button");
+
 
 
 
@@ -314,7 +314,9 @@ function activateEraser(){
     eraserButton.classList.remove("unselected");
     eraserButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png") 40 110, auto`);
-    findColoredSquares();
+    findColoredSquares(); // finds which squares are colored and changes their z-index to make them erasable
+    eraserWidthText.style.display = "block";
+    widthSlider.style.display = "block";
     /*resetCanvas();*/
 }
 
@@ -323,12 +325,16 @@ function deactivateEraser(){
     eraserButton.classList.add("unselected");
     context.globalCompositeOperation = 'source-over';
     monaLisaContainer.style.setProperty("--cursor", "auto");
+    eraserWidthText.style.display = "none";
+    widthSlider.style.display = "none";
 }
 
 function activatePen(){
     penButton.classList.remove("unselected");
     penButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/pen-cursor.png") 40 110, auto`);
+    penWidthText.style.display = "block";
+    widthSlider.style.display = "block";
     /*resetCanvas();*/
 }
 
@@ -336,6 +342,8 @@ function deactivatePen(){
     penButton.classList.remove("selected");
     penButton.classList.add("unselected");
     monaLisaContainer.style.setProperty("--cursor", "auto");
+    penWidthText.style.display = "none";
+    widthSlider.style.display = "none";
 }
 
 //records where user clicks on Mona Lisa with blowtorch cursor
@@ -362,26 +370,113 @@ monaLisaContainer.onclick = function (e){ // e is a mouse click event
     }
 }};
 
-//PAINT SPLATTER:
+
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
-const monaLisaSize = monaLisaContainer.getBoundingClientRect();
+var monaLisaSize = monaLisaContainer.getBoundingClientRect();
 
-canvas.width = window.innerWidth;
-canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
+console.log(monaLisaSize);
 
-//canvas.style.left = monaLisaSize.left+"px";
-//canvas.style.top = monaLisaSize.top+"px"; */
+/*canvas.style.left = monaLisaSize.left+"px";
+canvas.style.top = monaLisaSize.top+"px";*/
+
+canvas.width = monaLisaSize.width;
+canvas.height = monaLisaSize.height;
+canvas.style.left = monaLisaSize.left+"px";
+canvas.style.top = monaLisaSize.top+"px";
+
+//fixes canvas position bug by delaying getBoundingClientRect() until page has loaded
+window.onload = function(){
+    const canvas = document.getElementById("canvas");
+    monaLisaSize = monaLisaContainer.getBoundingClientRect();
+    canvas.width = monaLisaSize.width;
+    canvas.height = monaLisaSize.height;
+    canvas.style.left = monaLisaSize.left+"px";
+    canvas.style.top = monaLisaSize.top+"px";
+}
 
     
 
-window.addEventListener("resize", function(){
-    canvas.width = window.innerWidth;
-    canvas.height = monaLisaSize.height + monaLisaSize.top + 40;
-})
+window.onresize = function(){
+    const canvas = document.getElementById("canvas");
+    monaLisaSize = monaLisaContainer.getBoundingClientRect();
+    canvas.width = monaLisaSize.width;
+    canvas.height = monaLisaSize.height;
+    canvas.style.left = monaLisaSize.left+"px";
+    canvas.style.top = monaLisaSize.top+"px";
+}
 
+// PEN:
+
+let linewidth = 3; //default line width for pen and eraser
+
+const widthSlider = document.getElementById("width-slider");
+const penWidthText = document.getElementById("pen-width-text")
+const eraserWidthText = document.getElementById("eraser-width-text")
+
+
+
+widthSlider.oninput = function(){
+    linewidth = widthSlider.value;
+    penWidthText.innerHTML = `${linewidth}px`;
+    eraserWidthText.innerHTML = `${linewidth}px`;
+    if (isPenSelected){
+        penWidthText.style.display = "block";
+    } else if (isEraserSelected){
+        eraserWidthText.style.display = "block";
+    }
+}
+
+//Onload listener because pen is default tool selection
+window.onload = function(){
+    widthSlider.style.display = "block"
+    penWidthText.style.display = "block";
+    linewidth = widthSlider.value;
+    penWidthText.innerHTML = `${linewidth}px`;
+    eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
+}
+
+
+
+//const changeWidth = value => context.lineWidth = value;
+
+let isDrawing = false;
+
+const startDrawing = (e) => {
+    if (isPenSelected || isEraserSelected){
+        isDrawing = true;
+        context.beginPath();
+        context.lineWidth = linewidth;
+        context.moveTo(e.clientX - monaLisaSize.left, e.clientY - monaLisaSize.top);
+    }
+}
+
+const stopDrawing = () => {
+    isDrawing = false;
+}
+
+const draw = (e) => {
+    if (!isDrawing) return; // end function if not drawing
+    context.lineTo(e.clientX - monaLisaSize.left, e.clientY - monaLisaSize.top);
+    context.stroke();
+}
+
+
+
+
+const enterCanvas = (e) => {
+    context.beginPath();
+}
+
+window.addEventListener("mousedown", startDrawing);
+window.addEventListener("mouseup", stopDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mouseover", enterCanvas);
+
+
+//PAINT SPLATTER:
 
 var particles = [];
 
@@ -390,8 +485,8 @@ canvas.onmousedown = function(e){
     if (isSplatterSelected){
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
-                x: e.clientX,
-                y: e.clientY,
+                x: e.clientX - monaLisaSize.left,
+                y: e.clientY - monaLisaSize.top,
                 angle: i * 5,
                 size: 5 + Math.random() * 4,
                 life: 300 + Math.random() * 100
@@ -409,8 +504,8 @@ function animate(){
     last = Date.now();
     for (var i = 0; i < particles.length; i++){ //updates the particle's location, size, life
             var p = particles[i];
-            p.x += Math.cos(p.angle) * 6 + Math.random() * 4 - Math.random() * 2;
-            p.y += Math.sin(p.angle) * 6 + Math.random() * 4 - Math.random() * 2;
+            p.x += Math.cos(p.angle) * 4 + Math.random() * 4 - Math.random() * 2;
+            p.y += Math.sin(p.angle) * 4 + Math.random() * 4 - Math.random() * 2;
             p.life -= delta;
             p.size -= delta / 75;
         
@@ -505,40 +600,6 @@ monaLisaContainer.onmousedown = function clickEvent(e){ // e is a mouse click ev
 const resetCanvas = () => context.clearRect(0, 0, canvas.width, canvas.height);
 
 
-// PEN:
-
-context.lineWidth = 4;
-
-const changeWidth = value => context.lineWidth = value;
-
-let isDrawing = false;
-
-const startDrawing = (e) => {
-    if (isPenSelected || isEraserSelected){
-        isDrawing = true;
-        context.beginPath();
-        context.moveTo(e.clientX, e.clientY);
-    }
-}
-
-const stopDrawing = () => {
-    isDrawing = false;
-}
-
-const draw = (e) => {
-    if (!isDrawing) return; // end function if now drawing
-    context.lineTo(e.clientX, e.clientY);
-    context.stroke();
-}
-
-const enterCanvas = (e) => {
-    context.beginPath();
-}
-
-window.addEventListener("mousedown", startDrawing);
-window.addEventListener("mouseup", stopDrawing);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseover", enterCanvas);
 
 /*
 const particles = [];

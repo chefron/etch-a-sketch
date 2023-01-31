@@ -131,9 +131,8 @@ header {
 #swatch .info {
     text-align: center;
     font-family: 'Sedgwick Ave', cursive;
-    font-size: 1.3vmin;
+    font-size: 1.2vmin;
     font-weight: 600;
-    
 }
 
 input[type="color"] {
@@ -171,16 +170,56 @@ input[type="color"]::-moz-color-swatch {
     margin: 1vmin;
 }
 
+#pen-and-eraser-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#pen-and-eraser-wrapper {
+    display: flex;
+}
+
+#width-slider {
+    margin: -2% auto auto auto;
+    width: 88%;
+    display: none;
+}
+
+#pen-width-text {
+    position: absolute;
+    font-family: 'Sedgwick Ave', cursive;
+    font-size: 1.9vmin;
+    font-weight: 600;
+    color: black;
+    top: 80%;
+    left: 73%;
+    transform: translate(-50%, -50%);  
+    margin: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    display: none;
+}
+
+#eraser-width-text {
+    position: absolute;
+    font-family: 'Sedgwick Ave', cursive;
+    font-size: 1.7vmin;
+    font-weight: 600;
+    color: black;
+    top: 80%;
+    left: 76%;
+    transform: translate(-50%, -50%);  
+    margin: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    display: none;
+}
+
 #grid-options-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-.grid-icon {
-    
-}
-
 
 
 
@@ -206,12 +245,12 @@ input[type="color"]::-moz-color-swatch {
 #square-count {
     position: absolute;
     font-family: 'Sedgwick Ave', cursive;
-    font-size: 1.8vmin;
+    font-size: 2vmin;
     font-weight: 600;
     color: black;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -40%);  
+    transform: translate(-50%, -50%);  
     margin: 0;
     white-space: nowrap;
     pointer-events: none;
@@ -228,9 +267,9 @@ input[type="color"]::-moz-color-swatch {
     white-space: nowrap;
 }
 
-#slider {
+#grid-slider {
     width: 60%;
-    margin-top: -4%;
+    margin: -2% auto auto auto;
 }
 
 #mona-lisa-container {
@@ -239,10 +278,8 @@ input[type="color"]::-moz-color-swatch {
     min-width: 230px;
     height: auto;
     user-select: none;
-    margin: 1vmin;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    box-sizing: border-box;
     --size: 77vh;
     --s: calc(var(--size) / 6);
     --bor: calc(var(--size) / 60);
@@ -276,6 +313,7 @@ canvas {
     user-select: none;
     outline: 5px solid #d4af37;
     outline-offset: -5px;
+    box-sizing: border-box;
     filter: brightness(110%);
 }
 
@@ -414,3 +452,28 @@ svg {
 }
 
 
+@media (max-width: 480px) {
+    
+    .button {
+        position: relative;
+        width: 13vmin;
+        height: 13vmin;
+    }
+
+    #pen-width-text {
+        font-size: 2.5vmin;
+        top: 80%;
+        left: 72%;
+    }
+
+    #eraser-width-text {
+        font-size: 2.3vmin;
+        top: 80%;
+        left: 75%;
+    }
+
+   #square-count {
+        font-size: 2.5vmin;
+    }
+
+}
