@@ -299,11 +299,13 @@ function deactivateSplatter(){
 function activateGrid(){
     gridButtonWrapper.classList.remove("unselected");
     gridButtonWrapper.classList.add("selected");
+    gridSlider.style.display = "block";
 }
 
 function deactivateGrid(){
     gridButtonWrapper.classList.remove("selected");
     gridButtonWrapper.classList.add("unselected");
+    gridSlider.style.display = "none";
     if (!isGridHidden){
         toggleGrid();
         isGridHidden = true;
