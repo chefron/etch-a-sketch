@@ -186,8 +186,8 @@ let isGridSelected = false;
 const gridButtonWrapper = document.getElementById("grid-button-wrapper");
 let isEraserSelected = false;
 const eraserButton = document.getElementById("eraser-button");
-let isClearCanvasSelected = false;
-const clearCanvasButton = document.getElementById("clear-canvas-button");
+let isResetButtonSelected = false;
+const resetButton = document.getElementById("reset-button");
 
 function activateButton(buttonSelection){
     if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
@@ -202,6 +202,7 @@ function activateButton(buttonSelection){
         isGridSelected = false;
         isEraserSelected = false;
         isPenSelected = false;
+        isResetButtonSelected = false;
     } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
         deactivateBlowtorch();
         isBlowtorchSelected = false;
@@ -217,6 +218,7 @@ function activateButton(buttonSelection){
         isGridSelected = false;
         isEraserSelected = false;
         isPenSelected = false;
+        isResetButtonSelected = false;
     } else if ((buttonSelection == "splatter-button") && (isSplatterSelected)){
         deactivateSplatter();
         isSplatterSelected = false;
@@ -232,6 +234,7 @@ function activateButton(buttonSelection){
         isGridSelected = true;
         isEraserSelected = false;
         isPenSelected = false;
+        isResetButtonSelected = false;
     } else if ((buttonSelection == "grid-button-wrapper") && (isGridSelected)){
         deactivateGrid();
         isGridSelected = false;
@@ -247,6 +250,7 @@ function activateButton(buttonSelection){
         isGridSelected = false;
         isEraserSelected = true;
         isPenSelected = false;
+        isResetButtonSelected = false;
     } else if ((buttonSelection == "eraser-button") && (isEraserSelected)){
         deactivateEraser();
         isEraserSelected = false;
@@ -262,10 +266,11 @@ function activateButton(buttonSelection){
         isGridSelected = false;
         isEraserSelected = false;
         isPenSelected = true;
+        isResetButtonSelected = false;
     } else if ((buttonSelection == "pen-button") && (isPenSelected)){
         deactivatePen();
         isPenSelected = false;
-    } else if ((buttonSelection == "clear-canvas-button") && !isClearCanvasSelected){
+    } else if ((buttonSelection == "reset-button") && !isResetButtonSelected){
         deactivateGrid();
         deactivateBlowtorch();
         deactivateSplatter();
@@ -277,6 +282,7 @@ function activateButton(buttonSelection){
         isGridSelected = false;
         isEraserSelected = false;
         isPenSelected = false;
+        isResetButtonSelected = true;
     //    isClearCanvasSelected = true;
    // } else if ((buttonSelection == "pen-button") && (isPenSelected)){
     //    deactivatePen();
@@ -367,8 +373,8 @@ function deactivatePen(){
 }
 
 function resetMonaLisa(){
-    clearCanvasButton.classList.remove("unselected"); //Highlights button
-    clearCanvasButton.classList.add("selected");
+    resetButton.classList.remove("unselected"); //Highlights button
+    resetButton.classList.add("selected");
     resetCanvas(); //Erases items drawn on canvas
     for (let i = 0; i < numOfSquares; i++){ //Resets squares' colors
         squares[i].style.backgroundColor = "";
@@ -381,8 +387,24 @@ function resetMonaLisa(){
 }
 
 function deactivateResetButton(){
-    clearCanvasButton.classList.remove("selected"); //Highlights button
-    clearCanvasButton.classList.add("unselected");
+    resetButton.classList.remove("selected"); //Highlights button
+    resetButton.classList.add("unselected");
+}
+
+
+//RESET WARNING:
+const tooltip = document.getElementById("tooltip");
+
+//Displays warning on mouseover
+resetButton.onmouseover = function(e){
+    if (!isResetButtonSelected){
+        tooltip.style.display = "block";
+    }
+}
+
+//Hides warning on mouseout
+resetButton.onmouseout = function(e){
+    tooltip.style.display = "none";
 }
 
 

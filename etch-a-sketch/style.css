@@ -93,7 +93,6 @@ header {
     border: .6vmin solid #eb0000;
     background-color :rgb(240, 240, 240);
     background-image: url("https://www.transparenttextures.com/patterns/brick-wall.png");
-    overflow: hidden;
 }
 
 .button:hover {
@@ -167,7 +166,7 @@ input[type="color"]::-moz-color-swatch {
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
-    margin: 1vmin;
+    margin: 3vmin 1vmin 0 1vmin;
 }
 
 #pen-and-eraser-container {
@@ -223,7 +222,7 @@ input[type="color"]::-moz-color-swatch {
 
 
 
-#splatter, #blowtorch, #eraser, #pen, #clear {
+#splatter, #blowtorch, #eraser, #pen, #reset {
     width: 100%;
     height: 100%;
 }
@@ -279,6 +278,47 @@ input[type="color"]::-moz-color-swatch {
     margin: -2% auto auto auto;
 }
 
+#reset-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#tooltip {
+    display: none;
+    position: relative;
+    background-color :#d4af37;
+    text-align: center;
+    width: 80%;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: .8em;
+    font-weight: 500;
+    border-radius: 2%;
+    color: white;
+    padding: 2%;
+    z-index: 1;
+    margin-bottom: -3%;
+    animation: bounce-in .2s forwards;
+}
+
+@keyframes bounce-in {
+    0%{transform: scale(0%)}
+    80%{transform: scale(110%);}
+    100%{transform: scale(100%);}
+}
+
+#tooltip::after {
+    position: absolute;
+    content: " ";
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #d4af37 transparent transparent transparent;
+  }
+
 #mona-lisa-container {
     position: relative;
     max-width: 275px;
@@ -286,7 +326,7 @@ input[type="color"]::-moz-color-swatch {
     height: auto;
     user-select: none;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+    /*overflow: hidden;*/
     --size: 77vh;
     --s: calc(var(--size) / 6);
     --bor: calc(var(--size) / 60);
@@ -393,10 +433,10 @@ canvas {
     display: block;
     right: 0;
     bottom: 0;
-    font-family: 'MonteCarlo', cursive;
+    font-family: 'Sedgwick Ave Display', cursive;
     color: #f5ca3e;
-    font-size: 2.5vmax;
-    font-weight: 600;
+    font-size: 2.3vmax;
+    text-shadow: 0 0 2px black;
     width: auto;
     height: fit-content;
     
@@ -405,6 +445,62 @@ canvas {
 #site-info {
     margin: 0;
     padding-right: 1vw;
+}
+
+#credit-bubble-wrapper {
+    
+    position: absolute;
+    left: -30.15%;
+    top: 31.3%;
+    width: 150%;
+    height: auto;
+    z-index: 2;
+}
+
+#credit-bubble {
+    /*left: 2%;
+    top: 31.5%;
+    -webkit-shape-inside: polygon(40% 0%,47% 0%,100% 100%,0% 100%);
+    -webkit-clip-path: polygon(40% 0%,47% 0%,100% 100%,0% 100%);
+    background: white;
+    float: right;*/
+    
+    
+}
+
+#left, #right {
+    height: 100vh;
+    width: 48%;
+    background-color: transparent;
+}
+
+#left {
+    shape-outside: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
+    float: left;
+  }
+  
+#right {
+    shape-outside: polygon(0% 0%, 100% 0%, 100% 100%);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+    float: right;
+  }
+
+#credit-text {
+    background: repeating-conic-gradient(from 145deg at 50% -5%, #E920FF 0% 2%, #0023FF 2% 4%, #1BD700 4% 6%, #FFFF00 6% 8%, #FF8600 8% 10%, #FF0D0D 10% 12%);
+    font-family: arial;
+    text-align: center;
+    clip-path: polygon(47.5% 0%, 52.5% 0%, 100% 100%, 0% 100%);
+
+    
+    
+}
+
+
+     
+
+#credit-bubble::after {
+ 
 }
 
 /*@keyframes burn {
