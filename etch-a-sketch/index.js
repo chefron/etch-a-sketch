@@ -380,8 +380,8 @@ function resetMonaLisa(){
         squares[i].style.backgroundColor = "";
     }
     if (isMonaLisaBurning){ //Erases burning SVG layer
-        const div = document.querySelector(".circle");
-        monaLisaContainer.removeChild(div);
+        const fire = document.querySelector(".circle");
+        monaLisaContainer.removeChild(fire);
         isMonaLisaBurning = false;
     }
 }
@@ -430,9 +430,9 @@ monaLisaContainer.onclick = function (e){ // e is a mouse click event
             monaLisaContainer.style.setProperty("--right", `${right}px`);
             monaLisaContainer.style.setProperty("--top", `${top}px`);
             monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-            const div = document.createElement("div");
-            div.className = "circle";
-            monaLisaContainer.appendChild(div);
+            const fire = document.createElement("div");
+            fire.className = "circle";
+            monaLisaContainer.appendChild(fire);
             isMonaLisaBurning = true;
     }
 }};
@@ -664,11 +664,56 @@ monaLisaContainer.onmousedown = function clickEvent(e){ // e is a mouse click ev
 
 //RESET CANVAS:
 
-function resetCanvas() {
+function resetCanvas(){
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 //const resetCanvas = () => context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+//SITE INFO:
+
+const infoLink = document.getElementById("site-info");
+const infoBackground = document.getElementById("info-background");
+const sunglasses = document.getElementById("sunglasses");
+const siteInfo = document.getElementById("info-wrapper")
+let infoIsDisplayed = false;
+
+//Reveals site info:
+infoLink.onclick = function(e){
+    infoIsDisplayed = true;
+    siteInfo.classList.add("reveal");
+    siteInfo.style.display = "block";
+    infoBackground.style.display = "block";
+    sunglasses.style.display = "block";
+    monaLisaContainer.style.overflow = "visible";
+    
+    if (isMonaLisaBurning){ //Hides burning SVG layers
+        const fires = document.querySelectorAll(".circle");
+        fires.forEach((fire) => {
+            fire.style.visibility = "hidden";
+        });
+        }
+}
+
+//Closes site info:
+window.onclick = function(e) {
+    if (infoIsDisplayed && (e.target !== infoLink)) {
+        infoBackground.style.display = "none";
+        siteInfo.style.display = "none";
+        sunglasses.style.display = "none";
+        monaLisaContainer.style.overflow = "hidden";
+        infoIsDisplayed = false;
+        const fire = document.querySelector(".circle");
+
+        if (isMonaLisaBurning){ //Shows burning SVG layers
+            const fires = document.querySelectorAll(".circle");
+            fires.forEach((fire) => {
+                fire.style.visibility = "visible";
+            });
+            }
+        }
+}
 
 
 
