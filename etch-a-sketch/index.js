@@ -1,34 +1,18 @@
-let colorSelection = "#963A2F"; // Default color is red
+//COLOR PICKER:
+let colorSelection = "#000000"; // Default color is black
 const colorPicker = document.getElementById("color-picker");
 const hex = document.getElementById("hex"); // HEX text in color picker
 
 // Gets color from color picker
 colorPicker.addEventListener("input", function(){
     colorSelection = colorPicker.value;
-  /*  hex.innerHTML = colorPicker.value; */
-    console.log(colorPicker.value);
     }, false);
-
-const buttons = document.querySelectorAll(".button");
-
-
-buttons.forEach(button => {
-    button.addEventListener("click", function(){
-        activateButton(button.id);
-    })
-});
 
 const gridSlider = document.getElementById("grid-slider");
 const grid = document.getElementById("grid");
 let isGridHidden = true;
 
 let numOfSquares = 100;
-
-let squares = document.querySelectorAll(".square");
-
-
-
-
 
 function populateGrid(){
     for (let i = 0; i < numOfSquares; i++){
@@ -54,14 +38,9 @@ function populateGrid(){
     }
 }
 
-
 populateGrid();
 
-
-
 let mouseDown = false;
-
-
 
 function assignEventListeners(){
     squares = document.querySelectorAll(".square");
@@ -79,7 +58,6 @@ assignEventListeners();
 
 document.addEventListener("mouseup", function(){
     mouseDown = false;
-    console.log("mouseup");
 });    
 
 // Changes square colors when you drag mouse over them
@@ -94,7 +72,6 @@ function paint(i){
         }
     }
 };
-
 
 function clearGrid(){
     squares.forEach(square => square.remove());
@@ -165,18 +142,11 @@ function toggleGrid(){
     
     isGridHidden = !isGridHidden;
 }
-    
-//window.onload = function() {
-  //  const canvas = document.getElementById("mona-lisa-canvas");
-    //const ctx = canvas.getContext("2d");
-    //const img = document.getElementById("mona-lisa");
-    //ctx.drawImage(img, 0, 0, ctx.canvas.width, ctx.canvas.height);
-//}
 
 const monaLisaContainer = document.getElementById("mona-lisa-container");
 
-
-let isPenSelected = true;
+/*const buttons = document.querySelectorAll(".button");
+let isPenSelected = false;
 const penButton = document.getElementById("pen-button");
 let isBlowtorchSelected = false;
 const blowtorchButton = document.getElementById("blowtorch-button");
@@ -187,8 +157,80 @@ const gridButtonWrapper = document.getElementById("grid-button-wrapper");
 let isEraserSelected = false;
 const eraserButton = document.getElementById("eraser-button");
 let isResetButtonSelected = false;
-const resetButton = document.getElementById("reset-button");
+const resetButton = document.getElementById("reset-button");*/
 
+
+
+const buttons = {
+    blowtorch: {
+      element: document.getElementById("blowtorch-button"),
+      isActive: false,
+      activate: activateBlowtorch,
+      deactivate: deactivateBlowtorch,
+    },
+
+    splatter: {
+      element: document.getElementById("splatter-button"),
+      isActive: false,
+      activate: activateSplatter,
+      deactivate: deactivateSplatter,
+    },
+    grid: {
+      element: document.getElementById("grid-button-wrapper"),
+      isActive: false,
+      activate: activateGrid,
+      deactivate: deactivateGrid,
+    },
+    eraser: {
+      element: document.getElementById("eraser-button"),
+      isActive: false,
+      activate: activateEraser,
+      deactivate: deactivateEraser,
+    },
+    pen: {
+      element: document.getElementById("pen-button"),
+      isActive: true,
+      activate: activatePen,
+      deactivate: deactivatePen,
+    },
+    reset: {
+      element: document.getElementById("reset-button"),
+      isActive: false,
+      activate: resetMonaLisa,
+      deactivate: deactivateResetButton,
+    }
+};
+
+
+/*buttons.forEach(button => {
+    button.addEventListener("click", function(){
+        if (button.isActive) {
+            button.deactivate();
+        }
+        activateButton(button.id);
+    })
+});*/
+
+const buttonsArray = Object.values(buttons);
+
+buttonsArray.forEach(button => {
+    button.element.addEventListener("click", function() {
+      if (button.isActive) {
+        button.deactivate();
+      } else {
+        buttons.forEach(otherButton => {
+          if (otherButton.isActive) {
+            otherButton.deactivate();
+          }
+        });
+        button.activate();
+      }
+      button.isActive = !button.isActive;
+    });
+  });
+
+
+/*
 function activateButton(buttonSelection){
     if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
         deactivateSplatter();
@@ -283,13 +325,9 @@ function activateButton(buttonSelection){
         isEraserSelected = false;
         isPenSelected = false;
         isResetButtonSelected = true;
-    //    isClearCanvasSelected = true;
-   // } else if ((buttonSelection == "pen-button") && (isPenSelected)){
-    //    deactivatePen();
-     //   isPenSelected = false;
     }
 }
-
+*/
 
 function activateBlowtorch(){
     blowtorchButton.classList.remove("unselected");
@@ -391,19 +429,18 @@ function deactivateResetButton(){
     resetButton.classList.add("unselected");
 }
 
-
 //RESET WARNING:
 const tooltip = document.getElementById("tooltip");
 
 //Displays warning on mouseover
-resetButton.onmouseover = function(e){
-    if (!isResetButtonSelected){
+buttons.reset.onmouseover = function(e){
+    if (!buttons.reset.isActive){
         tooltip.style.display = "block";
     }
 }
 
 //Hides warning on mouseout
-resetButton.onmouseout = function(e){
+buttons.reset.onmouseout = function(e){
     tooltip.style.display = "none";
 }
 
@@ -444,11 +481,6 @@ const context = canvas.getContext("2d");
 
 var monaLisaSize = monaLisaContainer.getBoundingClientRect();
 
-console.log(monaLisaSize);
-
-/*canvas.style.left = monaLisaSize.left+"px";
-canvas.style.top = monaLisaSize.top+"px";*/
-
 canvas.width = monaLisaSize.width;
 canvas.height = monaLisaSize.height;
 canvas.style.left = monaLisaSize.left+"px";
@@ -464,8 +496,6 @@ window.onload = function(){
     canvas.style.top = monaLisaSize.top+"px";
 }
 
-    
-
 window.onresize = function(){
     const canvas = document.getElementById("canvas");
     monaLisaSize = monaLisaContainer.getBoundingClientRect();
@@ -475,7 +505,7 @@ window.onresize = function(){
     canvas.style.top = monaLisaSize.top+"px";
 }
 
-// PEN:
+// PEN and ERASER:
 
 let linewidth = 3; //default line width for pen and eraser
 
@@ -483,8 +513,7 @@ const widthSlider = document.getElementById("width-slider");
 const penWidthText = document.getElementById("pen-width-text")
 const eraserWidthText = document.getElementById("eraser-width-text")
 
-
-
+//Allows user to change line width
 widthSlider.oninput = function(){
     linewidth = widthSlider.value;
     penWidthText.innerHTML = `${linewidth}px`;
@@ -496,7 +525,7 @@ widthSlider.oninput = function(){
     }
 }
 
-//Onload listener because pen is default tool selection
+//Gets properties on window load because pen is default tool selection
 window.onload = function(){
     widthSlider.style.display = "block"
     penWidthText.style.display = "block";
@@ -506,8 +535,6 @@ window.onload = function(){
 }
 
 activatePen();
-
-//const changeWidth = value => context.lineWidth = value;
 
 let isDrawing = false;
 
@@ -529,11 +556,7 @@ const draw = (e) => {
     if (!isDrawing) return; // end function if not drawing
     context.lineTo(e.clientX - monaLisaSize.left, e.clientY - monaLisaSize.top);
     context.stroke();
-    
 }
-
-
-
 
 const enterCanvas = (e) => {
     context.beginPath();
@@ -543,6 +566,32 @@ canvas.addEventListener("mousedown", startDrawing);
 window.addEventListener("mouseup", stopDrawing);
 canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseover", enterCanvas);
+
+//Increases z-index of colored squares so they can be erased
+function findColoredSquares(){
+    squares = document.querySelectorAll(".square");
+    for (let i = 0; i < numOfSquares; i++){
+        const compStyle = window.getComputedStyle(squares[i]).backgroundColor;
+        if (compStyle != "rgba(0, 0, 0, 0)"){
+            squares[i].style.zIndex = "1";
+        }
+    }
+}
+
+//Allows eraser to also work on squares layer when canvas layer is clicked
+canvas.addEventListener("mousedown", function(){
+    mouseDown = true;
+});
+
+function erase(){
+    context.globalCompositeOperation = "destination-out";
+}
+
+monaLisaContainer.onmousedown = function clickEvent(e){
+    if (isEraserSelected){
+        erase();
+    }
+}
 
 
 //PAINT SPLATTER:
@@ -617,61 +666,13 @@ function animloop(){
 
 animloop();
 
-
-//ERASER:
-
-//Increases z-index of colored squares so they can be erased
-function findColoredSquares(){
-    squares = document.querySelectorAll(".square");
-    for (let i = 0; i < numOfSquares; i++){
-        const compStyle = window.getComputedStyle(squares[i]).backgroundColor;
-        if (compStyle != "rgba(0, 0, 0, 0)"){
-            squares[i].style.zIndex = "1";
-        }
-    }
-}
-
-//Checks if mouse down for both layers so eraser activates for squares when canvas is clicked
-canvas.addEventListener("mousedown", function(){
-    mouseDown = true;
-});
-
-/*function assignEventListeners(){
-    squares = document.querySelectorAll(".square");
-    for (let i = 0; i < numOfSquares; i++){
-        squares[i].addEventListener("mousedown", function(){
-            mouseDown = true;
-            console.log("mousedown");
-        });
-        squares[i].addEventListener("mouseover", paint(i));
-        squares[i].addEventListener("mousedown", paint(i));
-    }
-}
-*/
-
-function erase(){
-    
-    context.globalCompositeOperation = "destination-out";
-
-    //setInterval(toggleGrid, 1);
-}
-
-monaLisaContainer.onmousedown = function clickEvent(e){ // e is a mouse click event
-    if (isEraserSelected){
-        erase();
-    }
-}
-
 //RESET CANVAS:
 
 function resetCanvas(){
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-//const resetCanvas = () => context.clearRect(0, 0, canvas.width, canvas.height);
-
-
-//SITE INFO:
+//RAINBOW PUKE SITE INFO MODAL:
 
 const infoLink = document.getElementById("site-info");
 const infoBackground = document.getElementById("info-background");
@@ -679,7 +680,7 @@ const sunglasses = document.getElementById("sunglasses");
 const siteInfo = document.getElementById("info-wrapper")
 let infoIsDisplayed = false;
 
-//Reveals site info:
+//Reveals modal:
 infoLink.onclick = function(e){
     infoIsDisplayed = true;
     siteInfo.classList.add("reveal");
@@ -687,7 +688,6 @@ infoLink.onclick = function(e){
     infoBackground.style.display = "block";
     sunglasses.style.display = "block";
     monaLisaContainer.style.overflow = "visible";
-    
     if (isMonaLisaBurning){ //Hides burning SVG layers
         const fires = document.querySelectorAll(".circle");
         fires.forEach((fire) => {
@@ -696,7 +696,7 @@ infoLink.onclick = function(e){
         }
 }
 
-//Closes site info:
+//Hides modal:
 window.onclick = function(e) {
     if (infoIsDisplayed && (e.target !== infoLink)) {
         infoBackground.style.display = "none";
@@ -705,7 +705,6 @@ window.onclick = function(e) {
         monaLisaContainer.style.overflow = "hidden";
         infoIsDisplayed = false;
         const fire = document.querySelector(".circle");
-
         if (isMonaLisaBurning){ //Shows burning SVG layers
             const fires = document.querySelectorAll(".circle");
             fires.forEach((fire) => {
@@ -714,97 +713,3 @@ window.onclick = function(e) {
             }
         }
 }
-
-
-
-/*
-const particles = [];
-
-// Creates new particles on user click
-canvas.onmousedown = function(e){
-    for (let i = 0; i < 36 * 2; i++){
-        particles.push({
-            x: e.clientX,
-            y: e.clientY,
-            angle: i * 5,
-            size: 5 + Math.random() * 3,
-            life: 200 + Math.random() * 50
-        });
-    }
-}
-
-let delta = 0;
-const last = Date.now();
-
-function animate(){
-    delta = Date.now() - last; // calculates the time elapsed since the last frame
-    for (var i = 0; i < particles.length; i++){ //updates the particle's location, size, life
-        const particle = particles[i];
-        particle.x += Math.cos(particle.angle) * 4 + Math.random() * 2 - Math.random() * 2;
-        particle.y += Math.sin(particle.angle) * 4 + Math.random() * 2 - Math.random() * 2;
-        particle.life -= delta;
-        particle.size -= delta / 50;
-
-// Checks the life and size of each particle and removes ones with zero or negative values//
-        if (particle.size <= 0){
-            particle.life = 0;
-        }
-        if (particle.life <= 0){
-            particles.splice(i--, 1);
-            continue;
-        }
-    }
-}
-
-// Draws the particles on the canvas
-function render(){
-    ctx.fillStyle = colorSelection;
-    for (let i = 0; i < particles.length; i++){
-        if (Math.random() < 0.1)
-        {
-            continue;
-        }
-        const particle = particles[i];
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2, false);
-        ctx.fill();
-    }
-}
-
-
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
-
-
-(function animloop(){
-    requestAnimFrame(animloop);
-    animate();
-    render();
-})();
-
-
-
-
-*/
-
-    
-
-
-
-
-
-//function changeColor() {
- //   squares[i].style.backgroundColor = "red";
-//}
-
-
-
-
-
-
