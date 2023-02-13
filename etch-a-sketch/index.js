@@ -64,9 +64,9 @@ document.addEventListener("mouseup", function(){
 function paint(i){
     let squares = document.querySelectorAll(".square");
     return function(){
-        if (mouseDown && !isGridHidden && !isEraserSelected){
+        if (mouseDown && !isGridHidden && !buttons.eraser.isActive){
             squares[i].style.backgroundColor = colorSelection;
-        } else if (mouseDown && isEraserSelected) {
+        } else if (mouseDown && buttons.eraser.isActive) {
             squares[i].style.backgroundColor = ""; //Eraser tools resets background colors of squares
             squares[i].style.zIndex = "0";
         }
@@ -143,24 +143,6 @@ function toggleGrid(){
     isGridHidden = !isGridHidden;
 }
 
-const monaLisaContainer = document.getElementById("mona-lisa-container");
-
-/*const buttons = document.querySelectorAll(".button");
-let isPenSelected = false;
-const penButton = document.getElementById("pen-button");
-let isBlowtorchSelected = false;
-const blowtorchButton = document.getElementById("blowtorch-button");
-let isSplatterSelected = false;
-const splatterButton = document.getElementById("splatter-button");
-let isGridSelected = false;
-const gridButtonWrapper = document.getElementById("grid-button-wrapper");
-let isEraserSelected = false;
-const eraserButton = document.getElementById("eraser-button");
-let isResetButtonSelected = false;
-const resetButton = document.getElementById("reset-button");*/
-
-
-
 const buttons = {
     blowtorch: {
       element: document.getElementById("blowtorch-button"),
@@ -213,19 +195,19 @@ const buttons = {
 
 const buttonsArray = Object.values(buttons);
 
+
 buttonsArray.forEach(button => {
     button.element.addEventListener("click", function() {
-      if (button.isActive) {
-        button.deactivate();
-      } else {
-        buttons.forEach(otherButton => {
+      if (!button.isActive) {
+        buttonsArray.forEach(otherButton => {
           if (otherButton.isActive) {
             otherButton.deactivate();
+            otherButton.isActive = false;
           }
         });
         button.activate();
+        button.isActive = true;
       }
-      button.isActive = !button.isActive;
     });
   });
 
@@ -329,29 +311,42 @@ function activateButton(buttonSelection){
 }
 */
 
+const monaLisaContainer = document.getElementById("mona-lisa-container");
+
+
+
+
+
+
+
 function activateBlowtorch(){
+    const blowtorchButton = document.getElementById("blowtorch-button");
     blowtorchButton.classList.remove("unselected");
     blowtorchButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
 }
 
 function deactivateBlowtorch(){
+    const blowtorchButton = document.getElementById("blowtorch-button");
     blowtorchButton.classList.remove("selected");
     blowtorchButton.classList.add("unselected");
 }
 
 function activateSplatter(){
+    const splatterButton = document.getElementById("splatter-button");
     splatterButton.classList.remove("unselected");
     splatterButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/paint-bucket-cursor.png"), auto`);
 }
 
 function deactivateSplatter(){
+    const splatterButton = document.getElementById("splatter-button");
     splatterButton.classList.remove("selected");
     splatterButton.classList.add("unselected");
 }
 
 function activateGrid(){
+    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
     gridButtonWrapper.classList.remove("unselected");
     gridButtonWrapper.classList.add("selected");
     gridSlider.style.display = "block";
@@ -362,6 +357,7 @@ function activateGrid(){
 }
 
 function deactivateGrid(){
+    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
     gridButtonWrapper.classList.remove("selected");
     gridButtonWrapper.classList.add("unselected");
     gridSlider.style.display = "none";
@@ -375,6 +371,7 @@ function deactivateGrid(){
 }
 
 function activateEraser(){
+    const eraserButton = document.getElementById("eraser-button");
     eraserButton.classList.remove("unselected");
     eraserButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png") 15 45, auto`);
@@ -385,6 +382,7 @@ function activateEraser(){
 }
 
 function deactivateEraser(){
+    const eraserButton = document.getElementById("eraser-button");
     eraserButton.classList.remove("selected");
     eraserButton.classList.add("unselected");
     context.globalCompositeOperation = 'source-over';
@@ -394,6 +392,7 @@ function deactivateEraser(){
 }
 
 function activatePen(){
+    const penButton = document.getElementById("pen-button");
     penButton.classList.remove("unselected");
     penButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/pen-cursor.png") 0 32, auto`);
@@ -403,12 +402,15 @@ function activatePen(){
 }
 
 function deactivatePen(){
+    const penButton = document.getElementById("pen-button");
     penButton.classList.remove("selected");
     penButton.classList.add("unselected");
     monaLisaContainer.style.setProperty("--cursor", "auto");
     penWidthText.style.display = "none";
     widthSlider.style.display = "none";
 }
+
+const resetButton = document.getElementById("reset-button");
 
 function resetMonaLisa(){
     resetButton.classList.remove("unselected"); //Highlights button
@@ -433,14 +435,14 @@ function deactivateResetButton(){
 const tooltip = document.getElementById("tooltip");
 
 //Displays warning on mouseover
-buttons.reset.onmouseover = function(e){
+resetButton.onmouseover = function(e){
     if (!buttons.reset.isActive){
         tooltip.style.display = "block";
     }
 }
 
 //Hides warning on mouseout
-buttons.reset.onmouseout = function(e){
+resetButton.onmouseout = function(e){
     tooltip.style.display = "none";
 }
 
@@ -451,7 +453,7 @@ let isMonaLisaBurning = false;
 
 //records where user clicks on Mona Lisa with blowtorch cursor
 monaLisaContainer.onclick = function (e){ // e is a mouse click event
-    if (isBlowtorchSelected){
+    if (buttons.blowtorch.isActive){
     const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
     console.log(dimensions);
     console.log(e.clientY);
@@ -518,9 +520,9 @@ widthSlider.oninput = function(){
     linewidth = widthSlider.value;
     penWidthText.innerHTML = `${linewidth}px`;
     eraserWidthText.innerHTML = `${linewidth}px`;
-    if (isPenSelected){
+    if (buttons.pen.isActive){
         penWidthText.style.display = "block";
-    } else if (isEraserSelected){
+    } else if (buttons.eraser.isActive){
         eraserWidthText.style.display = "block";
     }
 }
@@ -539,7 +541,7 @@ activatePen();
 let isDrawing = false;
 
 const startDrawing = (e) => {
-    if (isPenSelected || isEraserSelected){
+    if (buttons.pen.isActive || buttons.eraser.isActive){
         context.strokeStyle = colorSelection;
         isDrawing = true;
         context.beginPath();
@@ -588,7 +590,7 @@ function erase(){
 }
 
 monaLisaContainer.onmousedown = function clickEvent(e){
-    if (isEraserSelected){
+    if (buttons.eraser.isActive){
         erase();
     }
 }
@@ -600,7 +602,7 @@ var particles = [];
 
 // Creates new particles on user click
 canvas.onmousedown = function(e){
-    if (isSplatterSelected){
+    if (buttons.splatter.isActive){
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
                 x: e.clientX - monaLisaSize.left,
