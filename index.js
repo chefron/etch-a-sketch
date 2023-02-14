@@ -442,6 +442,7 @@ let isMonaLisaBurning = false;
 
 //records where user clicks on Mona Lisa with blowtorch cursor
 monaLisaContainer.onclick = function(e) {
+    
     if (buttons.blowtorch.isActive){
         const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
         console.log(dimensions);
@@ -467,14 +468,17 @@ monaLisaContainer.onclick = function(e) {
 
 // for mobile:
 monaLisaContainer.ontouchstart = function(e) {
+    
+    e.preventDefault();
+    
     if (buttons.blowtorch.isActive){
-    const dimensions = e.currentTarget.getBoundingClientRect();
-    var touch = e.touches[0] || e.changedTouches[0];
-    const left = touch.pageX - dimensions.left;
-    const right = dimensions.width - left;
-    const top = touch.pageY - dimensions.top;
-    const bottom = dimensions.height - top;
-
+        const dimensions = e.currentTarget.getBoundingClientRect();
+        var touch = e.touches[0] || e.changedTouches[0];
+        const left = touch.pageX - dimensions.left;
+        const right = dimensions.width - left;
+        const top = touch.pageY - dimensions.top;
+        const bottom = dimensions.height - top;
+    
     if (touch.pageX > dimensions.left && touch.pageX < dimensions.right // Checks if user touches within Mona Lisa
         && touch.pageY > (dimensions.top - 15) && touch.pageY < (dimensions.bottom - 15)){
         monaLisaContainer.style.setProperty("--left", `${left}px`);
