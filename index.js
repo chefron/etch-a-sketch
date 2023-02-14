@@ -443,29 +443,53 @@ let isMonaLisaBurning = false;
 //records where user clicks on Mona Lisa with blowtorch cursor
 monaLisaContainer.onclick = function(e) {
     if (buttons.blowtorch.isActive){
-    const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
-    console.log(dimensions);
-    console.log(e.clientY);
-    const left = e.clientX - dimensions.left; // x position within element
-    const right = dimensions.width - left;
-    const top = e.clientY - dimensions.top; // y position within element
-    const bottom = dimensions.height - top;
-    console.log(left, right, top, bottom);
+        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
+        console.log(dimensions);
+        console.log(e.clientY);
+        const left = e.clientX - dimensions.left; // x position within element
+        const right = dimensions.width - left;
+        const top = e.clientY - dimensions.top; // y position within element
+        const bottom = dimensions.height - top;
+        console.log(left, right, top, bottom);
 
     if (e.clientX > dimensions.left && e.clientX < dimensions.right // Checks if user clicks within Mona Lisa
         && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
-            monaLisaContainer.style.setProperty("--left", `${left}px`);
-            monaLisaContainer.style.setProperty("--right", `${right}px`);
-            monaLisaContainer.style.setProperty("--top", `${top}px`);
-            monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-            const fire = document.createElement("div");
-            fire.className = "circle";
-            monaLisaContainer.appendChild(fire);
-            isMonaLisaBurning = true;
+        monaLisaContainer.style.setProperty("--left", `${left}px`);
+        monaLisaContainer.style.setProperty("--right", `${right}px`);
+        monaLisaContainer.style.setProperty("--top", `${top}px`);
+        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+        const fire = document.createElement("div");
+        fire.className = "circle";
+        monaLisaContainer.appendChild(fire);
+        isMonaLisaBurning = true;
+    }
+}};
+
+// for mobile:
+monaLisaContainer.ontouchstart = function(e) {
+    if (buttons.blowtorch.isActive){
+    const dimensions = e.currentTarget.getBoundingClientRect();
+    var touch = e.touches[0] || e.changedTouches[0];
+    const left = touch.pageX - dimensions.left;
+    const right = dimensions.width - left;
+    const top = touch.pageY - dimensions.top;
+    const bottom = dimensions.height - top;
+
+    if (touch.pageX > dimensions.left && touch.pageX < dimensions.right // Checks if user touches within Mona Lisa
+        && touch.pageY > (dimensions.top - 15) && touch.pageY < (dimensions.bottom - 15)){
+        monaLisaContainer.style.setProperty("--left", `${left}px`);
+        monaLisaContainer.style.setProperty("--right", `${right}px`);
+        monaLisaContainer.style.setProperty("--top", `${top}px`);
+        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+        const fire = document.createElement("div");
+        fire.className = "circle";
+        monaLisaContainer.appendChild(fire);
+        isMonaLisaBurning = true;
     }
 }};
 
 
+//CANVAS:
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
@@ -487,6 +511,7 @@ window.onload = function(){
     canvas.style.top = monaLisaSize.top+"px";
 }
 
+//gets and updates new canvas size if window is resized
 window.onresize = function(){
     const canvas = document.getElementById("canvas");
     monaLisaSize = monaLisaContainer.getBoundingClientRect();
