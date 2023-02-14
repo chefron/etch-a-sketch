@@ -440,43 +440,16 @@ resetButton.onmouseout = function(e){
 
 let isMonaLisaBurning = false;
 
-//records where user clicks on Mona Lisa with blowtorch cursor
-monaLisaContainer.onclick = function(e) {
-    
-    if (buttons.blowtorch.isActive){
-        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
-        console.log(dimensions);
-        console.log(e.clientY);
-        const left = e.clientX - dimensions.left; // x position within element
-        const right = dimensions.width - left;
-        const top = e.clientY - dimensions.top; // y position within element
-        const bottom = dimensions.height - top;
-        console.log(left, right, top, bottom);
-
-    if (e.clientX > dimensions.left && e.clientX < dimensions.right // Checks if user clicks within Mona Lisa
-        && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
-        monaLisaContainer.style.setProperty("--left", `${left}px`);
-        monaLisaContainer.style.setProperty("--right", `${right}px`);
-        monaLisaContainer.style.setProperty("--top", `${top}px`);
-        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-        const fire = document.createElement("div");
-        fire.className = "circle";
-        monaLisaContainer.appendChild(fire);
-        isMonaLisaBurning = true;
-    }
-}};
-
-// for mobile:
-
 monaLisaContainer.addEventListener("touchstart", function(e) {
     
     if (buttons.blowtorch.isActive){
-        const dimensions = e.currentTarget.getBoundingClientRect();
+        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
         var touch = e.touches[0] || e.changedTouches[0];
-        const left = touch.pageX - dimensions.left;
+        const left = touch.pageX - dimensions.left;  // x position within element
         const right = dimensions.width - left;
-        const top = touch.pageY - dimensions.top;
+        const top = touch.pageY - dimensions.top; // y position within element
         const bottom = dimensions.height - top;
+        console.log("blowtorch touchstart");
     
     if (touch.pageX > dimensions.left && touch.pageX < dimensions.right // Checks if user touches within Mona Lisa
         && touch.pageY > (dimensions.top - 15) && touch.pageY < (dimensions.bottom - 15)){
@@ -491,6 +464,35 @@ monaLisaContainer.addEventListener("touchstart", function(e) {
     }
 }
 }, { passive: true });
+
+// for desktop
+monaLisaContainer.addEventListener("mousedown", function(e) {
+    
+    if (buttons.blowtorch.isActive && (!isMonaLisaBurning)){
+        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
+        console.log(dimensions);
+        const left = e.clientX - dimensions.left; // x position within element
+        const right = dimensions.width - left;
+        const top = e.clientY - dimensions.top; // y position within element
+        const bottom = dimensions.height - top;
+        console.log("blowtorch mousedown");
+
+    if (e.clientX > dimensions.left && e.clientX < dimensions.right // Checks if user clicks within Mona Lisa
+        && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
+        monaLisaContainer.style.setProperty("--left", `${left}px`);
+        monaLisaContainer.style.setProperty("--right", `${right}px`);
+        monaLisaContainer.style.setProperty("--top", `${top}px`);
+        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+        const fire = document.createElement("div");
+        fire.className = "circle";
+        monaLisaContainer.appendChild(fire);
+        isMonaLisaBurning = true;
+    }
+}});
+
+
+
+
 
 
 //CANVAS:
@@ -618,24 +620,8 @@ canvas.addEventListener("mousedown", function() { // Listens for mousedown on ca
 
 var particles = [];
 
-// creates new particles on user click
-
-canvas.onmousedown = function(e) {
-    if (buttons.splatter.isActive){
-        for (var i = 0; i < 50 * 2; i++){
-            particles.push({
-                x: e.clientX - monaLisaSize.left,
-                y: e.clientY - monaLisaSize.top,
-                angle: i * 5,
-                size: 5 + Math.random() * 4,
-                life: 300 + Math.random() * 100
-            });
-        }
-    }
-}
-
+// creates new particles on user touch
 canvas.addEventListener("touchstart", function(e) { // for mobile
-   
     if (buttons.splatter.isActive){
         var touch = e.touches[0] || e.changedTouches[0];
         for (var i = 0; i < 50 * 2; i++){
@@ -649,6 +635,21 @@ canvas.addEventListener("touchstart", function(e) { // for mobile
         }
     }
 }, { passive: true });
+
+//for desktop
+canvas.onmousedown = function(e) {
+    if (buttons.splatter.isActive){
+        for (var i = 0; i < 50 * 2; i++){
+            particles.push({
+                x: e.clientX - monaLisaSize.left,
+                y: e.clientY - monaLisaSize.top,
+                angle: i * 5,
+                size: 5 + Math.random() * 4,
+                life: 300 + Math.random() * 100
+            });
+        }
+    }
+}
 
 var delta = 0;
 var last = Date.now();
