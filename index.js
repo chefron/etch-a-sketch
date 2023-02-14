@@ -467,9 +467,8 @@ monaLisaContainer.onclick = function(e) {
 }};
 
 // for mobile:
-monaLisaContainer.ontouchstart = function(e) {
-    
-    e.preventDefault();
+
+monaLisaContainer.addEventListener("touchstart", function(e) {
     
     if (buttons.blowtorch.isActive){
         const dimensions = e.currentTarget.getBoundingClientRect();
@@ -490,7 +489,8 @@ monaLisaContainer.ontouchstart = function(e) {
         monaLisaContainer.appendChild(fire);
         isMonaLisaBurning = true;
     }
-}};
+}
+}, { passive: true });
 
 
 //CANVAS:
@@ -598,26 +598,6 @@ function findColoredSquares(){
     }
 }
 
-// EVENT LISTENERS:
-canvas.addEventListener("mousedown", function() {
-    mouseDown = true;
-});
-
-canvas.addEventListener("touchstart", function() {
-    mouseDown = true;
-    console.log("touchstart")
-})
-
-canvas.addEventListener("touchmove", function() {
-    mouseDown = true;
-    console.log("touchmove")
-})
-
-canvas.addEventListener("touchend", function() {
-    mouseDown = false;
-    console.log("touchend")
-})
-
 // ERASE:
 function erase(){
     context.globalCompositeOperation = "destination-out";
@@ -629,11 +609,9 @@ monaLisaContainer.onmousedown = function clickEvent(e) {
     }
 }
 
-monaLisaContainer.ontouchstart = function clickEvent(e) {
-    if (buttons.eraser.isActive){
-        erase();
-    }
-}
+canvas.addEventListener("mousedown", function() { // Listens for mousedown on canvas in addition to grid so eraser can erase both layers at once
+    mouseDown = true;
+});
 
 
 //PAINT SPLATTER:
@@ -656,8 +634,8 @@ canvas.onmousedown = function(e) {
     }
 }
 
-canvas.ontouchstart = function(e) { // for mobile
-    e.preventDefault();
+canvas.addEventListener("touchstart", function(e) { // for mobile
+   
     if (buttons.splatter.isActive){
         var touch = e.touches[0] || e.changedTouches[0];
         for (var i = 0; i < 50 * 2; i++){
@@ -670,7 +648,7 @@ canvas.ontouchstart = function(e) { // for mobile
             });
         }
     }
-}
+}, { passive: true });
 
 var delta = 0;
 var last = Date.now();
