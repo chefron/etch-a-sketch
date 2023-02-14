@@ -589,10 +589,6 @@ canvas.addEventListener("touchend", function() {
     console.log("touchend")
 })
 
-canvas.addEventListener("mousedown", handleStart, false);
-canvas.addEventListener("touchstart", handleStart, false);
-
-
 // ERASE:
 function erase(){
     context.globalCompositeOperation = "destination-out";
@@ -616,10 +612,9 @@ monaLisaContainer.ontouchstart = function clickEvent(e) {
 var particles = [];
 
 // creates new particles on user click
-function handleStart(e) {
-    e.preventDefault(); // prevents default behavior of scrolling on touch event
+
+canvas.onmousedown = function(e) {
     if (buttons.splatter.isActive){
-        var touch = e.touches[0] || e.changedTouches[0]; // captures touch coordinates
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
                 x: e.clientX - monaLisaSize.left,
@@ -632,19 +627,21 @@ function handleStart(e) {
     }
 }
 
-/*canvas.onmousedown = function(e){
+canvas.ontouchstart = function(e) { // for mobile
+    e.preventDefault();
     if (buttons.splatter.isActive){
+        var touch = e.touches[0] || e.changedTouches[0];
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
-                x: e.clientX - monaLisaSize.left,
-                y: e.clientY - monaLisaSize.top,
+                x: touch.pageX - monaLisaSize.left,
+                y: touch.pageY - monaLisaSize.top,
                 angle: i * 5,
                 size: 5 + Math.random() * 4,
                 life: 300 + Math.random() * 100
             });
         }
     }
-}*/
+}
 
 var delta = 0;
 var last = Date.now();
