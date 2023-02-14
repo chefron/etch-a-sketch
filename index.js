@@ -183,18 +183,7 @@ const buttons = {
     }
 };
 
-
-/*buttons.forEach(button => {
-    button.addEventListener("click", function(){
-        if (button.isActive) {
-            button.deactivate();
-        }
-        activateButton(button.id);
-    })
-});*/
-
-const buttonsArray = Object.values(buttons);
-
+const buttonsArray = Object.values(buttons); // returns an array from the buttons object above
 
 buttonsArray.forEach(button => {
     button.element.addEventListener("click", function() {
@@ -452,7 +441,7 @@ resetButton.onmouseout = function(e){
 let isMonaLisaBurning = false;
 
 //records where user clicks on Mona Lisa with blowtorch cursor
-monaLisaContainer.onclick = function (e){ // e is a mouse click event
+monaLisaContainer.onclick = function(e) {
     if (buttons.blowtorch.isActive){
     const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
     console.log(dimensions);
@@ -569,7 +558,7 @@ window.addEventListener("mouseup", stopDrawing);
 canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseover", enterCanvas);
 
-//Increases z-index of colored squares so they can be erased
+// increases z-index of colored squares so they can be erased
 function findColoredSquares(){
     squares = document.querySelectorAll(".square");
     for (let i = 0; i < numOfSquares; i++){
@@ -580,16 +569,42 @@ function findColoredSquares(){
     }
 }
 
-//Allows eraser to also work on squares layer when canvas layer is clicked
-canvas.addEventListener("mousedown", function(){
+// EVENT LISTENERS:
+canvas.addEventListener("mousedown", function() {
     mouseDown = true;
 });
 
+canvas.addEventListener("touchstart", function() {
+    mouseDown = true;
+    console.log("touchstart")
+})
+
+canvas.addEventListener("touchmove", function() {
+    mouseDown = true;
+    console.log("touchmove")
+})
+
+canvas.addEventListener("touchend", function() {
+    mouseDown = false;
+    console.log("touchend")
+})
+
+canvas.addEventListener("mousedown", handleStart, false);
+canvas.addEventListener("touchstart", handleStart, false);
+
+
+// ERASE:
 function erase(){
     context.globalCompositeOperation = "destination-out";
 }
 
-monaLisaContainer.onmousedown = function clickEvent(e){
+monaLisaContainer.onmousedown = function clickEvent(e) {
+    if (buttons.eraser.isActive){
+        erase();
+    }
+}
+
+monaLisaContainer.ontouchstart = function clickEvent(e) {
     if (buttons.eraser.isActive){
         erase();
     }
@@ -600,9 +615,11 @@ monaLisaContainer.onmousedown = function clickEvent(e){
 
 var particles = [];
 
-// Creates new particles on user click
-canvas.onmousedown = function(e){
+// creates new particles on user click
+function handleStart(e) {
+    e.preventDefault(); // prevents default behavior of scrolling on touch event
     if (buttons.splatter.isActive){
+        var touch = e.touches[0] || e.changedTouches[0]; // captures touch coordinates
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
                 x: e.clientX - monaLisaSize.left,
@@ -614,6 +631,20 @@ canvas.onmousedown = function(e){
         }
     }
 }
+
+/*canvas.onmousedown = function(e){
+    if (buttons.splatter.isActive){
+        for (var i = 0; i < 50 * 2; i++){
+            particles.push({
+                x: e.clientX - monaLisaSize.left,
+                y: e.clientY - monaLisaSize.top,
+                angle: i * 5,
+                size: 5 + Math.random() * 4,
+                life: 300 + Math.random() * 100
+            });
+        }
+    }
+}*/
 
 var delta = 0;
 var last = Date.now();
