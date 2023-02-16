@@ -45,12 +45,28 @@ let mouseDown = false;
 function assignEventListeners(){
     squares = document.querySelectorAll(".square");
     for (let i = 0; i < numOfSquares; i++){
+        
         squares[i].addEventListener("mousedown", function(){
             mouseDown = true;
             console.log("mousedown");
         });
-        squares[i].addEventListener("mouseover", paint(i));
         squares[i].addEventListener("mousedown", paint(i));
+        squares[i].addEventListener("mouseover", paint(i));
+        
+        squares[i].addEventListener("touchstart", function(){
+            mouseDown = true;
+            console.log("touchstart");
+        }, { passive: true });
+        squares[i].addEventListener("touchmove", paint(i), { passive: true });
+
+        
+        squares[i].addEventListener("touchend", function(){
+            mouseDown = false;
+            console.log("touchend");
+        }, { passive: true });
+
+        
+        
     }
 }
 
@@ -620,9 +636,13 @@ canvas.addEventListener("mousedown", function() { // Listens for mousedown on ca
 
 var particles = [];
 
+let isSplattering = false;
+
 // creates new particles on user touch
 canvas.addEventListener("touchstart", function(e) { // for mobile
-    if (buttons.splatter.isActive){
+    if (buttons.splatter.isActive && !isSplattering){
+        isSplattering = true;
+        console.log("splatter touch")
         var touch = e.touches[0] || e.changedTouches[0];
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
@@ -633,12 +653,17 @@ canvas.addEventListener("touchstart", function(e) { // for mobile
                 life: 300 + Math.random() * 100
             });
         }
+        setTimeout(function() { // prevents onmousedown listener from simulatenously firing
+            isSplattering = false;
+            console.log("done splattering")
+          }, 500);
     }
 }, { passive: true });
 
 //for desktop
 canvas.onmousedown = function(e) {
-    if (buttons.splatter.isActive){
+    if (buttons.splatter.isActive && !isSplattering){
+        console.log("splatter mouse")
         for (var i = 0; i < 50 * 2; i++){
             particles.push({
                 x: e.clientX - monaLisaSize.left,
@@ -654,6 +679,8 @@ canvas.onmousedown = function(e) {
 var delta = 0;
 var last = Date.now();
 
+
+
 function animate(){
     delta = Date.now() - last; // Calculates the time elapsed since the last frame
     last = Date.now();
@@ -662,7 +689,7 @@ function animate(){
             p.x += Math.cos(p.angle) * 4 + Math.random() * 4 - Math.random() * 2;
             p.y += Math.sin(p.angle) * 4 + Math.random() * 4 - Math.random() * 2;
             p.life -= delta;
-            p.size -= delta / 75;
+            p.size -= delta / 50;
         
     if (p.size <= 0){ // filter out non-existent particles
             p.life = 0;
@@ -702,7 +729,9 @@ function animloop(){
     render();
 };
 
-animloop();
+document.addEventListener("DOMContentLoaded", function(){
+    animloop(); // wait until DOM loaded to call function in order to prevent recurring bug
+  });
 
 //RESET CANVAS:
 
