@@ -436,12 +436,12 @@ function deactivateResetButton(){
     resetButton.classList.add("unselected");
 }
 
-//RESET WARNING:
+// RESET WARNING:
 const tooltip = document.getElementById("tooltip");
 
-//Displays warning on mouseover
+// displays warning on mouseover if on desktop
 resetButton.onmouseover = function(e){
-    if (!buttons.reset.isActive){
+    if (!buttons.reset.isActive && (window.innerWidth > 480)){
         tooltip.style.display = "block";
     }
 }
@@ -576,7 +576,20 @@ activatePen();
 
 let isDrawing = false;
 
-const startDrawing = (e) => {
+//for mobile
+const startDrawingMobile = (e) => {
+    if (buttons.pen.isActive || buttons.eraser.isActive){
+        context.strokeStyle = colorSelection;
+        isDrawing = true;
+        context.beginPath();
+        context.lineWidth = linewidth;
+        var touch = e.touches[0];
+        context.moveTo(touch.pageX - monaLisaSize.left, touch.pageY - monaLisaSize.top);
+    }
+}
+
+//for desktop
+const startDrawingDesktop = (e) => {
     if (buttons.pen.isActive || buttons.eraser.isActive){
         context.strokeStyle = colorSelection;
         isDrawing = true;
@@ -590,8 +603,21 @@ const stopDrawing = () => {
     isDrawing = false;
 }
 
-const draw = (e) => {
+//for mobile
+const drawMobile = (e) => {
     if (!isDrawing) return; // end function if not drawing
+    e.preventDefault();
+    console.log("is drawing on mobile");
+    var touch = e.touches[0];
+    context.lineTo(touch.pageX - monaLisaSize.left, touch.pageY - monaLisaSize.top);
+    context.stroke();
+}
+
+//for desktop
+const drawDesktop = (e) => {
+    if (!isDrawing) return; // end function if not drawing
+    e.preventDefault();
+    console.log("is drawing on desktop");
     context.lineTo(e.clientX - monaLisaSize.left, e.clientY - monaLisaSize.top);
     context.stroke();
 }
@@ -600,9 +626,16 @@ const enterCanvas = (e) => {
     context.beginPath();
 }
 
-canvas.addEventListener("mousedown", startDrawing);
+// for mobile
+canvas.addEventListener("touchstart", startDrawingMobile);
+window.addEventListener("touchend", stopDrawing);
+canvas.addEventListener("touchmove", drawMobile);
+//canvas.addEventListener("touchenter", enterCanvas);
+
+// for desktop
+canvas.addEventListener("mousedown", startDrawingDesktop);
 window.addEventListener("mouseup", stopDrawing);
-canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mousemove", drawDesktop);
 canvas.addEventListener("mouseover", enterCanvas);
 
 // increases z-index of colored squares so they can be erased
@@ -621,13 +654,26 @@ function erase(){
     context.globalCompositeOperation = "destination-out";
 }
 
+// for mobile
+monaLisaContainer.addEventListener("touchstart", function(e) {
+    if (buttons.eraser.isActive){
+        erase();
+        console.log("is erasing on mobile");
+        }
+    }
+)
+
+// for desktop
 monaLisaContainer.onmousedown = function clickEvent(e) {
     if (buttons.eraser.isActive){
         erase();
+        console.log("is erasing on desktop");
     }
 }
 
-canvas.addEventListener("mousedown", function() { // Listens for mousedown on canvas in addition to grid so eraser can erase both layers at once
+
+
+canvas.addEventListener("mousedown", function() { // Listens for mousedown on canvas in addition to grid so eraser affects both layers at once
     mouseDown = true;
 });
 
@@ -729,8 +775,9 @@ function animloop(){
     render();
 };
 
+// Wait until DOM loaded in order to prevent requestAnimFrame bug
 document.addEventListener("DOMContentLoaded", function(){
-    animloop(); // wait until DOM loaded to call function in order to prevent recurring bug
+    animloop();
   });
 
 //RESET CANVAS:
