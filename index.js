@@ -523,14 +523,23 @@ canvas.height = monaLisaSize.height;
 canvas.style.left = monaLisaSize.left+"px";
 canvas.style.top = monaLisaSize.top+"px";
 
-//fixes canvas position bug by delaying getBoundingClientRect() until page has loaded
-window.onload = function(){
+//Gets canvas size and pen (default tool) properties on load, initializes pen
+window.onload = function(){ //fixes canvas position bug by delaying getBoundingClientRect() until page has loaded
     const canvas = document.getElementById("canvas");
     monaLisaSize = monaLisaContainer.getBoundingClientRect();
+    
     canvas.width = monaLisaSize.width;
     canvas.height = monaLisaSize.height;
     canvas.style.left = monaLisaSize.left+"px";
     canvas.style.top = monaLisaSize.top+"px";
+
+    widthSlider.style.display = "block"
+    penWidthText.style.display = "block";
+    linewidth = widthSlider.value;
+    penWidthText.innerHTML = `${linewidth}px`;
+    eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
+
+    activatePen();
 }
 
 //gets and updates new canvas size if window is resized
@@ -562,17 +571,6 @@ widthSlider.oninput = function(){
         eraserWidthText.style.display = "block";
     }
 }
-
-//Gets properties on window load because pen is default tool selection
-window.onload = function(){
-    widthSlider.style.display = "block"
-    penWidthText.style.display = "block";
-    linewidth = widthSlider.value;
-    penWidthText.innerHTML = `${linewidth}px`;
-    eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
-}
-
-activatePen();
 
 let isDrawing = false;
 
