@@ -136,6 +136,7 @@ function activateEraser(){
     findColoredSquares(); // finds which squares are colored and changes their z-index to make them erasable
     eraserWidthText.style.display = "block";
     widthSlider.style.display = "block";
+    isEraserSelected = true;
 }
 
 function deactivateEraser(){
@@ -146,6 +147,7 @@ function deactivateEraser(){
     monaLisaContainer.style.setProperty("--cursor", "auto");
     eraserWidthText.style.display = "none";
     widthSlider.style.display = "none";
+    isEraserSelected = false;
 }
 
 function activatePen(){
@@ -472,6 +474,7 @@ let linewidth = 3; //default line width for pen and eraser
 const widthSlider = document.getElementById("width-slider");
 const penWidthText = document.getElementById("pen-width-text")
 const eraserWidthText = document.getElementById("eraser-width-text")
+let isEraserSelected = false;
 
 //Allows user to change line width
 widthSlider.oninput = function(){
@@ -586,17 +589,20 @@ canvas.addEventListener("mousedown", function() { // Listens for mousedown on ca
     mouseDown = true;
 });
 
-// Allows mobile user to from off grid to on grid and erase squares
+// Allows mobile user to drag from off grid to on grid and erase squares
 canvas.addEventListener("touchmove", function(event) {
-    let touch = event.touches[0];
-    let rect = grid.getBoundingClientRect();
-    let x = touch.clientX - rect.left;
-    let y = touch.clientY - rect.top;
-    let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
-    if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
-        paint(i)(event);
-    }
-    }, { passive: true });
+    if (!isGridHidden || isEraserSelected) {
+        let touch = event.touches[0];
+        let rect = grid.getBoundingClientRect();
+        let x = touch.clientX - rect.left;
+        let y = touch.clientY - rect.top;
+        let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
+        if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
+            paint(i)(event);
+        }
+        }
+}, { passive: true });
+
 
 
 //PAINT SPLATTER:
