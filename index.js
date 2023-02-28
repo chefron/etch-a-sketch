@@ -90,7 +90,6 @@ document.addEventListener("touchend", function(){
 function paint(i){
     let squares = document.querySelectorAll(".square");
     
-
     return function(event){
         let currentSquare = squares[i];
 
@@ -98,14 +97,14 @@ function paint(i){
             currentSquare.style.backgroundColor = colorSelection;
             console.log("fffuuuuuc")
           } else if (event.type === "touchstart" || event.type === "touchmove" && buttons.eraser.isActive) {
-            currentSquare.style.backgroundColor = ""; // eraser tools resets background colors of squares
+            currentSquare.style.backgroundColor = ""; // eraser tool resets background colors of squares
             currentSquare.style.zIndex = "0";
           }
 
         if (mouseDown && !isGridHidden && !buttons.eraser.isActive){
             currentSquare.style.backgroundColor = colorSelection;
         } else if (mouseDown && buttons.eraser.isActive) {
-            currentSquare.style.backgroundColor = ""; // eraser tools resets background colors of squares
+            currentSquare.style.backgroundColor = ""; 
             currentSquare.style.zIndex = "0";
         }
     }
@@ -710,6 +709,18 @@ canvas.addEventListener("mousedown", function() { // Listens for mousedown on ca
     mouseDown = true;
 });
 
+// Allows mobile user to from off grid to on grid and erase squares
+canvas.addEventListener("touchmove", function(event) {
+    let touch = event.touches[0];
+    let rect = grid.getBoundingClientRect();
+    let x = touch.clientX - rect.left;
+    let y = touch.clientY - rect.top;
+    let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
+    if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
+        paint(i)(event);
+    }
+    }, { passive: true });
+
 //PAINT SPLATTER:
 
 var particles = [];
@@ -977,4 +988,3 @@ window.onclick = function(e) {
     }
 }
 
-window.screen.orientation.lock("portrait");
