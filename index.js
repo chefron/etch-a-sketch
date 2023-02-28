@@ -36,7 +36,7 @@ const buttons = {
       deactivate: deactivatePen,
     },
     reset: {
-      element: document.getElementById("reset-warning"),
+      element: document.getElementById("reset-button-container"),
       isActive: false,
       activate: resetMonaLisa,
       deactivate: deactivateResetButton,
@@ -600,7 +600,7 @@ canvas.addEventListener("touchmove", function(event) {
         if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
             paint(i)(event);
         }
-        }
+    }
 }, { passive: true });
 
 
