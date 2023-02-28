@@ -344,12 +344,6 @@ function activateButton(buttonSelection){
 
 const monaLisaContainer = document.getElementById("mona-lisa-container");
 
-
-
-
-
-
-
 function activateBlowtorch(){
     const blowtorchButton = document.getElementById("blowtorch-button");
     blowtorchButton.classList.remove("unselected");
@@ -381,6 +375,7 @@ function activateSpraypaint() {
     const spraypaintButton = document.getElementById("spraypaint-button");
     spraypaintButton.classList.remove("unselected");
     spraypaintButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/spraypaint-cursor.png"), auto`);
 }
 
 function deactivateSpraypaint() {
