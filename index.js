@@ -887,3 +887,8 @@ window.onclick = function(e) {
     }
 }
 
+// Locks orientation in portrait mode
+if (screen.orientation) {
+    screen.orientation.lock('portrait');
+  }
+
