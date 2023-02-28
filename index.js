@@ -1,3 +1,194 @@
+const buttons = {
+    blowtorch: {
+      element: document.getElementById("blowtorch-button"),
+      isActive: false,
+      activate: activateBlowtorch,
+      deactivate: deactivateBlowtorch,
+    },
+    splatter: {
+      element: document.getElementById("splatter-button"),
+      isActive: false,
+      activate: activateSplatter,
+      deactivate: deactivateSplatter,
+    },
+    spraypaint: {
+        element: document.getElementById("spraypaint-button"),
+        isActive: false,
+        activate: activateSpraypaint,
+        deactivate: deactivateSpraypaint,
+      },
+    grid: {
+      element: document.getElementById("grid-button-wrapper"),
+      isActive: false,
+      activate: activateGrid,
+      deactivate: deactivateGrid,
+    },
+    eraser: {
+      element: document.getElementById("eraser-button"),
+      isActive: false,
+      activate: activateEraser,
+      deactivate: deactivateEraser,
+    },
+    pen: {
+      element: document.getElementById("pen-button"),
+      isActive: true,
+      activate: activatePen,
+      deactivate: deactivatePen,
+    },
+    reset: {
+      element: document.getElementById("reset-warning"),
+      isActive: false,
+      activate: resetMonaLisa,
+      deactivate: deactivateResetButton,
+    }
+};
+
+const buttonsArray = Object.values(buttons); // returns an array from the buttons object
+
+buttonsArray.forEach(button => {
+    button.element.addEventListener("click", function() {
+        if (!button.isActive) {
+            buttonsArray.forEach(otherButton => {
+                if (otherButton.isActive) {
+                    otherButton.deactivate();
+                    otherButton.isActive = false;
+                }
+            });
+            button.activate();
+            button.isActive = true;
+        }
+    });
+});
+
+const monaLisaContainer = document.getElementById("mona-lisa-container");
+
+function activateBlowtorch(){
+    const blowtorchButton = document.getElementById("blowtorch-button");
+    blowtorchButton.classList.remove("unselected");
+    blowtorchButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
+}
+
+function deactivateBlowtorch(){
+    const blowtorchButton = document.getElementById("blowtorch-button");
+    blowtorchButton.classList.remove("selected");
+    blowtorchButton.classList.add("unselected");
+}
+
+function activateSplatter(){
+    const splatterButton = document.getElementById("splatter-button");
+    splatterButton.classList.remove("unselected");
+    splatterButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/paint-bucket-cursor.png"), auto`);
+}
+
+function deactivateSplatter(){
+    const splatterButton = document.getElementById("splatter-button");
+    splatterButton.classList.remove("selected");
+    splatterButton.classList.add("unselected");
+}
+
+function activateSpraypaint() {
+    isSpraypaintSelected = true;
+    const spraypaintButton = document.getElementById("spraypaint-button");
+    spraypaintButton.classList.remove("unselected");
+    spraypaintButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/spraypaint-cursor.png"), auto`);
+}
+
+function deactivateSpraypaint() {
+    isSpraypaintSelected = false;
+    const spraypaintButton = document.getElementById("spraypaint-button");
+    spraypaintButton.classList.remove("selected");
+    spraypaintButton.classList.add("unselected");
+}
+
+function activateGrid(){
+    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
+    gridButtonWrapper.classList.remove("unselected");
+    gridButtonWrapper.classList.add("selected");
+    gridSlider.style.display = "block";
+    squareCount.style.display = "block";
+    gridButton.style.display = "block";
+    gridButtonOff.style.display = "none";
+    monaLisaContainer.style.setProperty("--cursor", `url("images/grid-cursor.png") 0 0, auto`);
+}
+
+function deactivateGrid(){
+    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
+    gridButtonWrapper.classList.remove("selected");
+    gridButtonWrapper.classList.add("unselected");
+    gridSlider.style.display = "none";
+    squareCount.style.display = "none";
+    gridButton.style.display = "none";
+    gridButtonOff.style.display = "block";
+    if (!isGridHidden){
+        toggleGrid();
+        isGridHidden = true;
+    }
+}
+
+function activateEraser(){
+    const eraserButton = document.getElementById("eraser-button");
+    eraserButton.classList.remove("unselected");
+    eraserButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png") 15 45, auto`);
+    findColoredSquares(); // finds which squares are colored and changes their z-index to make them erasable
+    eraserWidthText.style.display = "block";
+    widthSlider.style.display = "block";
+}
+
+function deactivateEraser(){
+    const eraserButton = document.getElementById("eraser-button");
+    eraserButton.classList.remove("selected");
+    eraserButton.classList.add("unselected");
+    context.globalCompositeOperation = 'source-over';
+    monaLisaContainer.style.setProperty("--cursor", "auto");
+    eraserWidthText.style.display = "none";
+    widthSlider.style.display = "none";
+}
+
+function activatePen(){
+    const penButton = document.getElementById("pen-button");
+    penButton.classList.remove("unselected");
+    penButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", `url("images/pen-cursor.png") 0 32, auto`);
+    penWidthText.style.display = "block";
+    widthSlider.style.display = "block";
+}
+
+function deactivatePen(){
+    const penButton = document.getElementById("pen-button");
+    penButton.classList.remove("selected");
+    penButton.classList.add("unselected");
+    monaLisaContainer.style.setProperty("--cursor", "auto");
+    penWidthText.style.display = "none";
+    widthSlider.style.display = "none";
+}
+
+const resetButton = document.getElementById("reset-button");
+
+function resetMonaLisa(){
+    resetButton.classList.remove("unselected"); // highlights button
+    resetButton.classList.add("selected");
+    monaLisaContainer.style.setProperty("--cursor", "auto");
+    resetCanvas(); // erases items drawn on canvas
+    for (let i = 0; i < numOfSquares; i++){ // resets squares' colors
+        squares[i].style.backgroundColor = "";
+    }
+    if (isMonaLisaBurning){ // erases burning SVG layer
+        const fire = document.querySelector(".circle");
+        monaLisaContainer.removeChild(fire);
+        isMonaLisaBurning = false;
+    }
+}
+
+function deactivateResetButton(){
+    resetButton.classList.remove("selected"); // highlights button
+    resetButton.classList.add("unselected");
+}
+
+
 // COLOR PICKER:
 
 let colorSelection = "#000000"; // Default color is black
@@ -113,7 +304,6 @@ function paint(i){
 function clearGrid(){
     squares.forEach(square => square.remove());
 }
- 
 
 gridSlider.addEventListener("input", function(){
     numOfSquares = Math.pow(Math.round(Math.sqrt(gridSlider.value)), 2); // returns slider value squared
@@ -162,7 +352,6 @@ gridButton.addEventListener("click", toggleGrid);
 const gridButtonOff = document.getElementById("grid-button-off");
 gridButtonOff.addEventListener("click", toggleGrid);
 
-
 function toggleGrid(){
     let squares = document.querySelectorAll(".square");
     if (isGridHidden){
@@ -178,314 +367,7 @@ function toggleGrid(){
         console.log("hide grid");
     }; 
     isGridHidden = !isGridHidden;
-}
-
-const buttons = {
-    blowtorch: {
-      element: document.getElementById("blowtorch-button"),
-      isActive: false,
-      activate: activateBlowtorch,
-      deactivate: deactivateBlowtorch,
-    },
-    splatter: {
-      element: document.getElementById("splatter-button"),
-      isActive: false,
-      activate: activateSplatter,
-      deactivate: deactivateSplatter,
-    },
-    spraypaint: {
-        element: document.getElementById("spraypaint-button"),
-        isActive: false,
-        activate: activateSpraypaint,
-        deactivate: deactivateSpraypaint,
-      },
-    grid: {
-      element: document.getElementById("grid-button-wrapper"),
-      isActive: false,
-      activate: activateGrid,
-      deactivate: deactivateGrid,
-    },
-    eraser: {
-      element: document.getElementById("eraser-button"),
-      isActive: false,
-      activate: activateEraser,
-      deactivate: deactivateEraser,
-    },
-    pen: {
-      element: document.getElementById("pen-button"),
-      isActive: true,
-      activate: activatePen,
-      deactivate: deactivatePen,
-    },
-    reset: {
-      element: document.getElementById("reset-button"),
-      isActive: false,
-      activate: resetMonaLisa,
-      deactivate: deactivateResetButton,
-    }
 };
-
-const buttonsArray = Object.values(buttons); // returns an array from the buttons object
-
-buttonsArray.forEach(button => {
-    button.element.addEventListener("click", function() {
-        if (!button.isActive) {
-            buttonsArray.forEach(otherButton => {
-                if (otherButton.isActive) {
-                    otherButton.deactivate();
-                    otherButton.isActive = false;
-                }
-            });
-            button.activate();
-            button.isActive = true;
-        }
-    });
-});
-
-
-/*
-function activateButton(buttonSelection){
-    if ((buttonSelection == "blowtorch-button") && !isBlowtorchSelected){
-        deactivateSplatter();
-        deactivateGrid();
-        deactivateEraser();
-        deactivatePen();
-        deactivateResetButton();
-        activateBlowtorch();
-        isBlowtorchSelected = true;
-        isSplatterSelected = false;
-        isGridSelected = false;
-        isEraserSelected = false;
-        isPenSelected = false;
-        isResetButtonSelected = false;
-    } else if ((buttonSelection == "blowtorch-button") && (isBlowtorchSelected)){
-        deactivateBlowtorch();
-        isBlowtorchSelected = false;
-    } else if ((buttonSelection == "splatter-button") && !isSplatterSelected){
-        deactivateBlowtorch();
-        deactivateGrid();
-        deactivateEraser();
-        deactivatePen();
-        deactivateResetButton();
-        activateSplatter();
-        isSplatterSelected = true;
-        isBlowtorchSelected = false;
-        isGridSelected = false;
-        isEraserSelected = false;
-        isPenSelected = false;
-        isResetButtonSelected = false;
-    } else if ((buttonSelection == "splatter-button") && (isSplatterSelected)){
-        deactivateSplatter();
-        isSplatterSelected = false;
-    } else if ((buttonSelection == "grid-button-wrapper") && !isGridSelected){
-        deactivateBlowtorch();
-        deactivateSplatter();
-        deactivateEraser();
-        deactivatePen();
-        deactivateResetButton();
-        activateGrid();
-        isSplatterSelected = false;
-        isBlowtorchSelected = false;
-        isGridSelected = true;
-        isEraserSelected = false;
-        isPenSelected = false;
-        isResetButtonSelected = false;
-    } else if ((buttonSelection == "grid-button-wrapper") && (isGridSelected)){
-        deactivateGrid();
-        isGridSelected = false;
-    } else if ((buttonSelection == "eraser-button") && !isEraserSelected){
-        deactivateGrid();
-        deactivateBlowtorch();
-        deactivateSplatter();
-        deactivatePen();
-        deactivateResetButton();
-        activateEraser();
-        isSplatterSelected = false;
-        isBlowtorchSelected = false;
-        isGridSelected = false;
-        isEraserSelected = true;
-        isPenSelected = false;
-        isResetButtonSelected = false;
-    } else if ((buttonSelection == "eraser-button") && (isEraserSelected)){
-        deactivateEraser();
-        isEraserSelected = false;
-    } else if ((buttonSelection == "pen-button") && !isPenSelected){
-        deactivateGrid();
-        deactivateBlowtorch();
-        deactivateSplatter();
-        deactivateEraser();
-        deactivateResetButton();
-        activatePen();
-        isSplatterSelected = false;
-        isBlowtorchSelected = false;
-        isGridSelected = false;
-        isEraserSelected = false;
-        isPenSelected = true;
-        isResetButtonSelected = false;
-    } else if ((buttonSelection == "pen-button") && (isPenSelected)){
-        deactivatePen();
-        isPenSelected = false;
-    } else if ((buttonSelection == "reset-button") && !isResetButtonSelected){
-        deactivateGrid();
-        deactivateBlowtorch();
-        deactivateSplatter();
-        deactivateEraser();
-        deactivatePen();
-        resetMonaLisa();
-        isSplatterSelected = false;
-        isBlowtorchSelected = false;
-        isGridSelected = false;
-        isEraserSelected = false;
-        isPenSelected = false;
-        isResetButtonSelected = true;
-    }
-}
-*/
-
-const monaLisaContainer = document.getElementById("mona-lisa-container");
-
-function activateBlowtorch(){
-    const blowtorchButton = document.getElementById("blowtorch-button");
-    blowtorchButton.classList.remove("unselected");
-    blowtorchButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
-}
-
-function deactivateBlowtorch(){
-    const blowtorchButton = document.getElementById("blowtorch-button");
-    blowtorchButton.classList.remove("selected");
-    blowtorchButton.classList.add("unselected");
-}
-
-function activateSplatter(){
-    const splatterButton = document.getElementById("splatter-button");
-    splatterButton.classList.remove("unselected");
-    splatterButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", `url("images/paint-bucket-cursor.png"), auto`);
-}
-
-function deactivateSplatter(){
-    const splatterButton = document.getElementById("splatter-button");
-    splatterButton.classList.remove("selected");
-    splatterButton.classList.add("unselected");
-}
-
-function activateSpraypaint() {
-    isSpraypaintSelected = true;
-    const spraypaintButton = document.getElementById("spraypaint-button");
-    spraypaintButton.classList.remove("unselected");
-    spraypaintButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", `url("images/spraypaint-cursor.png"), auto`);
-}
-
-function deactivateSpraypaint() {
-    isSpraypaintSelected = false;
-    const spraypaintButton = document.getElementById("spraypaint-button");
-    spraypaintButton.classList.remove("selected");
-    spraypaintButton.classList.add("unselected");
-}
-
-function activateGrid(){
-    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
-    gridButtonWrapper.classList.remove("unselected");
-    gridButtonWrapper.classList.add("selected");
-    gridSlider.style.display = "block";
-    squareCount.style.display = "block";
-    gridButton.style.display = "block";
-    gridButtonOff.style.display = "none";
-    monaLisaContainer.style.setProperty("--cursor", `url("images/grid-cursor.png") 0 0, auto`);
-}
-
-function deactivateGrid(){
-    const gridButtonWrapper = document.getElementById("grid-button-wrapper");
-    gridButtonWrapper.classList.remove("selected");
-    gridButtonWrapper.classList.add("unselected");
-    gridSlider.style.display = "none";
-    squareCount.style.display = "none";
-    gridButton.style.display = "none";
-    gridButtonOff.style.display = "block";
-    if (!isGridHidden){
-        toggleGrid();
-        isGridHidden = true;
-    }
-}
-
-function activateEraser(){
-    const eraserButton = document.getElementById("eraser-button");
-    eraserButton.classList.remove("unselected");
-    eraserButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png") 15 45, auto`);
-    findColoredSquares(); // finds which squares are colored and changes their z-index to make them erasable
-    eraserWidthText.style.display = "block";
-    widthSlider.style.display = "block";
-    /*resetCanvas();*/
-}
-
-function deactivateEraser(){
-    const eraserButton = document.getElementById("eraser-button");
-    eraserButton.classList.remove("selected");
-    eraserButton.classList.add("unselected");
-    context.globalCompositeOperation = 'source-over';
-    monaLisaContainer.style.setProperty("--cursor", "auto");
-    eraserWidthText.style.display = "none";
-    widthSlider.style.display = "none";
-}
-
-function activatePen(){
-    const penButton = document.getElementById("pen-button");
-    penButton.classList.remove("unselected");
-    penButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", `url("images/pen-cursor.png") 0 32, auto`);
-    penWidthText.style.display = "block";
-    widthSlider.style.display = "block";
-    /*resetCanvas();*/
-}
-
-function deactivatePen(){
-    const penButton = document.getElementById("pen-button");
-    penButton.classList.remove("selected");
-    penButton.classList.add("unselected");
-    monaLisaContainer.style.setProperty("--cursor", "auto");
-    penWidthText.style.display = "none";
-    widthSlider.style.display = "none";
-}
-
-const resetButton = document.getElementById("reset-button");
-
-function resetMonaLisa(){
-    resetButton.classList.remove("unselected"); // highlights button
-    resetButton.classList.add("selected");
-    monaLisaContainer.style.setProperty("--cursor", "auto");
-    resetCanvas(); // erases items drawn on canvas
-    for (let i = 0; i < numOfSquares; i++){ // resets squares' colors
-        squares[i].style.backgroundColor = "";
-    }
-    if (isMonaLisaBurning){ // erases burning SVG layer
-        const fire = document.querySelector(".circle");
-        monaLisaContainer.removeChild(fire);
-        isMonaLisaBurning = false;
-    }
-}
-
-function deactivateResetButton(){
-    resetButton.classList.remove("selected"); // highlights button
-    resetButton.classList.add("unselected");
-}
-
-// RESET WARNING:
-const tooltip = document.getElementById("tooltip");
-
-// displays warning on mouseover if on desktop
-resetButton.onmouseover = function(e){
-    if (!buttons.reset.isActive && (window.innerWidth > 480)){
-        tooltip.style.display = "block";
-    }
-}
-
-//Hides warning on mouseout
-resetButton.onmouseout = function(e){
-    tooltip.style.display = "none";
-}
 
 
 //BLOWTORCH:
@@ -716,6 +598,7 @@ canvas.addEventListener("touchmove", function(event) {
     }
     }, { passive: true });
 
+
 //PAINT SPLATTER:
 
 var particles = [];
@@ -885,12 +768,10 @@ canvas.addEventListener("mousedown", function(event) {
         var rect = canvas.getBoundingClientRect();
         var stageX = event.clientX - rect.left;
         var stageY = event.clientY - rect.top;
-    
         
-            RandomizeParticles(stageX, stageY);
-       
-    }
-  });
+        RandomizeParticles(stageX, stageY);
+    };
+});
 
 // Stop particle drawing
 canvas.addEventListener("touchend", function(event) {
@@ -939,7 +820,24 @@ function RandomizeParticles(stageX, stageY) {
 function resetCanvas(){
     context.clearRect(0, 0, canvas.width, canvas.height); // clears canvas
 }
+const tooltip = document.getElementById("tooltip");
 
+resetWarning = document.getElementById("reset-warning");
+resetButtonContainer = document.getElementById("reset-button-container");
+
+// displays reset warning on mouseover if on desktop
+resetButtonContainer.onmouseover = function(e){
+    if (!buttons.reset.isActive && (window.innerWidth > 480)){
+        resetWarning.style.display = "block";
+        resetButton.style.display = "none";
+    };
+};
+
+//Hides warning on mouseout
+resetButtonContainer.onmouseout = function(e){
+    resetWarning.style.display = "none";
+    resetButton.style.display = "block";
+}
 
 //RAINBOW PUKE SITE INFO MODAL:
 
@@ -949,7 +847,7 @@ const sunglasses = document.getElementById("sunglasses");
 const siteInfo = document.getElementById("info-wrapper")
 let infoIsDisplayed = false;
 
-//Reveals modal:
+// Reveals modal
 infoLink.onclick = function(e){
     infoIsDisplayed = true;
     siteInfo.classList.add("reveal");
@@ -965,7 +863,7 @@ infoLink.onclick = function(e){
         }
 }
 
-//Hides modal:
+// Hides modal
 window.onclick = function(e) {
     if (infoIsDisplayed && (e.target !== infoLink)) {
         infoBackground.style.display = "none";
