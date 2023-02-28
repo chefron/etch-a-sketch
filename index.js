@@ -49,30 +49,30 @@ function assignEventListeners(){
     squares = document.querySelectorAll(".square");
     for (let i = 0; i < numOfSquares; i++){
         
-       squares[i].addEventListener("mousedown", function(){
-            mouseDown = true;
-            console.log("mousedown");
-        });
+    squares[i].addEventListener("mousedown", function(){
+        mouseDown = true;
+        console.log("mousedown");
+    });
         
-        squares[i].addEventListener("mousedown", paint(i));
-        
-        squares[i].addEventListener("mouseover", paint(i));
-        
-        squares[i].addEventListener("touchstart", function(){
-           
-            console.log("touchstart");
+    squares[i].addEventListener("mousedown", paint(i));
+    
+    squares[i].addEventListener("mouseover", paint(i));
+
+
+    squares[i].addEventListener("touchstart", function(event) {
+        paint(i)(event);
+    }, { passive: true });
+
+    squares[i].addEventListener("touchmove", function(event) {
+        let touch = event.touches[0];
+        let rect = grid.getBoundingClientRect();
+        let x = touch.clientX - rect.left;
+        let y = touch.clientY - rect.top;
+        let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
+        if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
+            paint(i)(event);
+        }
         }, { passive: true });
-
-        squares[i].addEventListener("touchstart", paint(i), { passive: true });
-
-        squares[i].addEventListener("pointermove", function(){
-          
-            console.log("touchmove");
-        }, { passive: true });
-        
-       
-
-        squares[i].addEventListener("pointerover", paint(i), { passive: true });
     }
 }
 
@@ -89,12 +89,24 @@ document.addEventListener("touchend", function(){
 // Changes square colors when you drag mouse over them
 function paint(i){
     let squares = document.querySelectorAll(".square");
-    return function(){
+    
+
+    return function(event){
+        let currentSquare = squares[i];
+
+        if (event.type === "touchstart" || event.type === "touchmove" && !buttons.eraser.isActive) {
+            currentSquare.style.backgroundColor = colorSelection;
+            console.log("fffuuuuuc")
+          } else if (event.type === "touchstart" || event.type === "touchmove" && buttons.eraser.isActive) {
+            currentSquare.style.backgroundColor = ""; // eraser tools resets background colors of squares
+            currentSquare.style.zIndex = "0";
+          }
+
         if (mouseDown && !isGridHidden && !buttons.eraser.isActive){
-            squares[i].style.backgroundColor = colorSelection;
+            currentSquare.style.backgroundColor = colorSelection;
         } else if (mouseDown && buttons.eraser.isActive) {
-            squares[i].style.backgroundColor = ""; // eraser tools resets background colors of squares
-            squares[i].style.zIndex = "0";
+            currentSquare.style.backgroundColor = ""; // eraser tools resets background colors of squares
+            currentSquare.style.zIndex = "0";
         }
     }
 };
