@@ -976,3 +976,5 @@ window.onclick = function(e) {
         }
     }
 }
+
+window.screen.orientation.lock("portrait");
