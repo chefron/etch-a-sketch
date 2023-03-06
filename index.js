@@ -19,7 +19,7 @@ const buttons = {
       },
     grid: {
       element: document.getElementById("grid-button-wrapper"),
-      isActive: false,
+      isActive: true,
       activate: activateGrid,
       deactivate: deactivateGrid,
     },
@@ -31,7 +31,7 @@ const buttons = {
     },
     pen: {
       element: document.getElementById("pen-button"),
-      isActive: true,
+      isActive: false,
       activate: activatePen,
       deactivate: deactivatePen,
     },
@@ -205,9 +205,16 @@ colorPicker.addEventListener("input", function(){
 
 // GRID (original Odin Project assignment):
 
+// sets default cursor as grid cursor
+function initializeGrid() {
+    monaLisaContainer.style.setProperty("--cursor", `url("images/grid-cursor.png") 0 0, auto`);
+}
+
+initializeGrid();
+
 const grid = document.getElementById("grid");
 const gridSlider = document.getElementById("grid-slider");
-let isGridHidden = true;
+let isGridHidden = false;
 let numOfSquares = 100;
 
 function populateGrid(){
@@ -448,13 +455,11 @@ window.onload = function(){ //fixes canvas position bug by delaying getBoundingC
     canvas.style.left = monaLisaSize.left+"px";
     canvas.style.top = monaLisaSize.top+"px";
 
-    widthSlider.style.display = "block"
-    penWidthText.style.display = "block";
-    linewidth = widthSlider.value;
-    penWidthText.innerHTML = `${linewidth}px`;
-    eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
-
-    activatePen();
+    //widthSlider.style.display = "block"
+   // penWidthText.style.display = "block";
+   // linewidth = widthSlider.value;
+   // penWidthText.innerHTML = `${linewidth}px`;
+    //eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
 }
 
 //gets and updates new canvas size if window is resized
@@ -887,8 +892,32 @@ window.onclick = function(e) {
     }
 }
 
+
+// ORIENTATION:
+
 // Locks orientation in portrait mode
 if (screen.orientation) {
     screen.orientation.lock('portrait');
   }
+
+// If orientation doesn't lock, display message instructing to return to portrait
+
+const requestPortrait = document.getElementById('request-portrait');
+let landscape = window.matchMedia('(orientation: landscape)');
+let portrait = window.matchMedia('(orientation: portrait)');
+
+// displays message
+landscape.addEventListener('change', function(e) {
+    if(e.matches && window.innerHeight < 430) {
+        requestPortrait.style.display = 'flex';
+        console.log('landscape mode');
+    }
+})
+
+// hides message
+portrait.addEventListener("change", function(e) { 
+    if (e.matches) {
+        requestPortrait.style.display = 'none';
+    }
+})
 

@@ -266,7 +266,7 @@ input[type="color"]::-moz-color-swatch {
 
 #square-count {
     position: absolute;
-    display: none;
+    display: block;
     font-family: 'Sedgwick Ave', cursive;
     font-size: 1.8vmin;
     font-weight: 600;
@@ -291,7 +291,7 @@ input[type="color"]::-moz-color-swatch {
 }
 
 #grid-slider {
-    display: none;
+    display: block;
     width: 65%;
     margin: -2% auto auto auto;
 }
@@ -394,6 +394,21 @@ canvas {
     z-index: 2;
 }
 
+.circle:before {
+    box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
+    background: rgba(0, 0, 0, 0.77);
+    
+}
+
+.circle:after {
+    box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
+    background-image: url(images/fire.png);
+    background-repeat: no-repeat;
+    background-size: 115%;
+    background-position-x: 50%;
+    background-position-y: 50%;
+}
+
 .circle:before,
 .circle:after {
     content: "";
@@ -492,7 +507,7 @@ canvas {
     shape-outside: polygon(0% 0%, 100% 0%, 100% 100%);
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
     float: right;
-  }
+}
 
 .info-text {
     background: repeating-conic-gradient(from 142deg at 50% -5%, #E920FF 0% 1.8%, #0023FF 1.8% 3.6%, #1BD700 3.6% 5.4%, #FFFF00 5.4% 7.2%, #FF8600 7.2% 9%, #FF0D0D 9% 10.8%);
@@ -550,56 +565,30 @@ h2 {
     to {top: 21.5%};
 }
 
-
-
-/*@keyframes burn {
-    0%   {top: 0%;
-          left: 0%;
-          right: 100%; 
-          bottom: 100%;
-          border-radius: 50%;
-    }
-    50%  {
-          top:  20%;
-          left: 0%;
-          right: 0%; 
-          bottom: 20%;
-          border-radius: 35%;
-    }
-    75%  {
-          top:  0%;
-          left: 0%;
-          right: 0%; 
-          bottom: 0%;
-          border-radius: 25%;
-    }
-    99%  {border: var(--bor) solid rgb(249, 249, 255);}
-    100% {
-          border: var(--bor) solid rgba(249, 249, 255, 0);
-          border-radius: 5%;}
-}
-
-*/
-
-.circle:before {
-    box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
-    background: rgba(0, 0, 0, 0.77);
-    
-}
-
-.circle:after {
-    box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
-    background-image: url(images/fire.png);
-    background-repeat: no-repeat;
-    background-size: 115%;
-    background-position-x: 50%;
-    background-position-y: 50%;
-}
-
 svg {
     width: 0;
     height: 0;
     display: block;
+}
+
+#request-portrait {
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    display: none;
+    width: 130px;
+    height: auto;
+}
+
+#speech-bubble {
+    width: 75%;
+    animation: bounce-in .2s forwards;
+}
+
+@keyframes bounce-in {
+    0%{transform: scale(0%)}
+    80%{transform: scale(110%);}
+    100%{transform: scale(100%);}
 }
 
 @media (max-width: 480px) {
@@ -648,5 +637,11 @@ svg {
     #mona-lisa-container {
         max-width: 40vw;
         max-width: 270px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 430px){
+    body, html {
+        overflow-y: scroll;
     }
 }
