@@ -1,4 +1,5 @@
-/* Font imports */
+/* Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond&family=MonteCarlo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap');
@@ -11,6 +12,9 @@
          url('fonts/aAttackGraffiti.ttf')  format('truetype'),
          url('fonts/aAttackGraffiti.svg#a Attack Graffiti') format('svg');
 }
+
+
+/* Global */
 
 html, body {
     width: 100%;
@@ -26,12 +30,14 @@ html, body {
       rgba(0, 0, 0, 0.25) 80%,
       rgba(0, 0, 0, 0.4) 100%
     ), url("images/black-wall.jpg");
+    background-position: 0 50%;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: 0 50%;
 }
 
+
 /* Layout */
+
 #flex-container {
     display: flex;
     flex-direction: column;
@@ -47,14 +53,14 @@ header {
 
 #mona-lisa-container {
     position: relative;
-    flex-shrink: 0;
     z-index: 3;
+    height: auto;
     max-width: 72vw;
     min-width: 230px;
-    height: auto;
+    flex-shrink: 0;
     overflow: hidden;
-    user-select: none;
     box-shadow: .8em .8em .8em rgba(0, 0, 0, 0.3);
+    user-select: none;
     cursor: var(--cursor);
     --size: 77vh;
     --s: calc(var(--size) / 6);
@@ -68,24 +74,26 @@ header {
 
 #toolbox {
     display: flex;
-    width: 100%;
-    max-height: 25vh;
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
+    width: 100%;
+    max-height: 25vh;
     margin: 3vmin 1vmin 1vmin 1vmin;
     padding-bottom: 1vmin;
 }
 
-/* Title */
+
+/* Header */
+
 #deface {
     position: relative;
     z-index: 1;
+    transform: rotate(3deg);
+    margin: 4% auto -13.5% auto;
     font-family: 'Sedgwick Ave Display', cursive;
     font-size: clamp(2.5em, 5.6vmin, 6vmin);
-    margin: 4% auto -13.5% auto;
     text-align: center;
-    transform: rotate(3deg);
     color: #f70d0d;
     text-shadow:
       3px 3px 0 rgb(0, 0, 0),
@@ -109,6 +117,119 @@ header {
   }
 
 
+/* Mona Lisa */
+
+#mona-lisa {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    display: block;
+    user-select: none;
+    outline: 5px solid #d4af37;
+    outline-offset: -5px;
+    box-sizing: border-box;
+    filter: brightness(110%);
+}
+
+canvas {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#grid {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    user-select: none;
+}
+
+.square {
+    box-sizing: border-box;
+    border: 1px none rgba(0, 0, 0, 0.3);
+    border-style: dashed; 
+    flex: 1 1 auto;
+    user-select: none;
+}
+
+.circle {
+    position: absolute;
+    left: 49%;
+    top: 50%;
+    transform:translate(-50%, -50%);
+    z-index: 2;
+    width: 108%;
+    height: 106%;
+    overflow: hidden;
+    filter: url(#wavy) blur(.75px);
+}
+
+.circle:before {
+    box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
+    background: rgba(0, 0, 0, 0.77);
+}
+
+.circle:after {
+    box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
+    background-image: url(images/fire.png);
+    background-position-x: 50%;
+    background-position-y: 50%;
+    background-size: 115%;
+    background-repeat: no-repeat;
+}
+
+.circle:before,
+.circle:after {
+    position: absolute;
+    left: var(--left);
+    right: var(--right);
+    top: var(--top);
+    bottom: var(--bottom);
+    border: var(--bor) solid rgb(249, 249, 255);
+    border-radius: 50%;
+    content: "";
+    animation: burn 10s ease-in forwards;
+}
+
+@keyframes burn {
+    0% {
+        left: var(--left);
+        right: var(--right);
+        top: var(--top);
+        bottom: var(--bottom);
+        border-radius: 50%;
+    }
+    70% {
+        left: 0px;
+        right: 0px;
+        border-radius: 40%;
+    }
+    90% {
+        border-radius: 20%;
+    }
+    100% {
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        border-radius: 5%;
+        border-width: calc(var(--bor)/2);
+    }
+}
+
+
+/* Toolbox */
+
+#splatter, #spraypaint, #blowtorch, #eraser, #pen, #reset, #clear-all {
+    width: 100%;
+    height: 100%;
+}
+
 .button {
     position: relative;
     margin: 2.5vmin;
@@ -122,8 +243,6 @@ header {
     background-image: url("https://www.transparenttextures.com/patterns/brick-wall.png");
 }
 
-
-
 .button:hover {
     scale: 1.15;
 }
@@ -135,21 +254,12 @@ header {
 .selected {
     filter: invert(100%);
     scale: 1.15;
-   
 }
-
-
 
 #swatch {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-
-
-#swatch h1 {
-    margin: 0;
 }
 
 #swatch h2 {
@@ -164,29 +274,27 @@ header {
 }
 
 input[type="color"] {
-    appearance: none;
-    background: none;
     width: 94%;
     height: 84%;
     padding: 0;
-    outline: none;
-    -webkit-appearance: none;
-    border: none;
     margin: auto auto 0 auto;
-
-    
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    outline: none;
 }
 
 input[type="color"]::-webkit-color-swatch {
+    padding: 0;
     border: 4px solid transparent;
     border-radius: 25% 25% 5% 5%;
-    padding: 0;
 }
 
 input[type="color"]::-moz-color-swatch {
+    padding: 0;
     border: 4px solid transparent;
     border-radius: 25% 25% 3% 3%;
-    padding: 0;
 }
 
 #pen-and-eraser-container {
@@ -200,11 +308,10 @@ input[type="color"]::-moz-color-swatch {
 }
 
 #width-slider {
+    display: none;
     margin: -2% auto auto auto;
     width: 88%;
-    display: none;
 }
-
 
 #pen-width-text {
     position: absolute;
@@ -223,28 +330,23 @@ input[type="color"]::-moz-color-swatch {
 
 #eraser-width-text {
     position: absolute;
+    top: 80%;
+    left: 76%;
+    transform: translate(-50%, -50%);
+    display: none;  
+    margin: 0;
     font-family: 'Sedgwick Ave', cursive;
     font-size: 1.7vmin;
     font-weight: 600;
     color: black;
-    top: 80%;
-    left: 76%;
-    transform: translate(-50%, -50%);  
-    margin: 0;
     white-space: nowrap;
     pointer-events: none;
-    display: none;
 }
 
 #grid-options-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-#splatter, #spraypaint, #blowtorch, #eraser, #pen, #reset, #clear-all {
-    width: 100%;
-    height: 100%;
 }
 
 #reset-warning {
@@ -266,27 +368,27 @@ input[type="color"]::-moz-color-swatch {
 
 #square-count {
     position: absolute;
+    top: 51%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: block;
+    margin: 0;
     font-family: 'Sedgwick Ave', cursive;
     font-size: 1.8vmin;
     font-weight: 600;
     color: black;
-    top: 51%;
-    left: 50%;
-    transform: translate(-50%, -50%);  
-    margin: 0;
     white-space: nowrap;
     pointer-events: none;
 }
 
 #grid-icon-wrapper h2 {
     position: absolute;
-    color: black;
     top: 98%;
     left: 50%;
     transform: translate(-50%, -50%);  
     margin: 0;
     font-weight: normal;
+    color: black;
     white-space: nowrap;
 }
 
@@ -303,157 +405,20 @@ input[type="color"]::-moz-color-swatch {
     align-items: center;
 }
 
-#tooltip {
-    display: none;
-    position: relative;
-    background-color :#d4af37;
-    text-align: center;
-    width: 90%;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: .8em;
-    font-weight: 500;
-    border-radius: 2%;
-    color: white;
-    padding: 2%;
-    z-index: 1;
-    margin-bottom: -3%;
-    animation: bounce-in .2s forwards;
-}
 
-@keyframes bounce-in {
-    0%{transform: scale(0%)}
-    80%{transform: scale(110%);}
-    100%{transform: scale(100%);}
-}
-
-#tooltip::after {
-    position: absolute;
-    content: " ";
-    top: 100%; /* At the bottom of the tooltip */
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #d4af37 transparent transparent transparent;
-}
-
-#mona-lisa-canvas {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-
-canvas {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-}
-
-#mona-lisa {
-    width: 100%;
-    height: auto;
-    max-height: 60vh;
-    display: block;
-    user-select: none;
-    outline: 5px solid #d4af37;
-    outline-offset: -5px;
-    box-sizing: border-box;
-    filter: brightness(110%);
-}
-
-#grid {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    user-select: none;
-}
-
-.square {
-    flex: 1 1 auto;
-    border: 1px none rgba(0, 0, 0, 0.3);
-    box-sizing: border-box;
-    user-select: none;
-    border-style: dashed;   
-}
-
-.circle {
-    position: absolute;
-    transform:translate(-50%, -50%);
-    left: 49%;
-    top: 50%;
-    width: 108%;
-    height: 106%;
-    filter: url(#wavy) blur(.75px);
-    overflow: hidden;
-    z-index: 2;
-}
-
-.circle:before {
-    box-shadow: 0 0 var(--boxShadow) rgb(255, 72, 0), inset 0 0 var(--boxShadow) rgb(223, 0, 0);
-    background: rgba(0, 0, 0, 0.77);
-    
-}
-
-.circle:after {
-    box-shadow: 0 0 calc(var(--bor)/2) rgb(255, 60, 0), inset 0 0 var(--bor) rgb(255, 176, 112);
-    background-image: url(images/fire.png);
-    background-repeat: no-repeat;
-    background-size: 115%;
-    background-position-x: 50%;
-    background-position-y: 50%;
-}
-
-.circle:before,
-.circle:after {
-    content: "";
-    position: absolute;
-    left: var(--left);
-    right: var(--right);
-    top: var(--top);
-    bottom: var(--bottom);
-    border: var(--bor) solid rgb(249, 249, 255);
-    border-radius: 50%;
-    animation: burn 10s ease-in forwards;
-}
-
-@keyframes burn {
-    0%   {
-          left: var(--left);
-          right: var(--right);
-          top: var(--top);
-          bottom: var(--bottom);
-          border-radius: 50%;
-    }
-    70%  {left: 0px;
-          right: 0px;
-          border-radius: 40%;}
-     90% {border-radius: 20%}
-    100% {top: 0px;
-          left: 0px;
-          right: 0px;
-          bottom: 0px;
-          border-radius: 5%;
-          border-width: calc(var(--bor)/2);
-    }
-}
+/* FOOTER and INFO */
 
 #site-info-wrapper {
     position: absolute;
-    display: block;
     right: 0;
     bottom: 0;
-    font-family: 'Sedgwick Ave Display', cursive;
-    color: #f5ca3e;
-    font-size: 2.2vmax;
-    text-shadow: 0 0 2px black;
+    display: block;
     width: auto;
     height: fit-content;
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-size: 2.2vmax;
+    color: #f5ca3e;
+    text-shadow: 0 0 2px black;
 }
 
 #site-info {
@@ -468,12 +433,13 @@ canvas {
 
 #info-wrapper {
     position: absolute;
-    display: none;
+    
     left: -30.1%;
     top: 27.5%;
+    z-index: 2;
+    display: none;
     width: 150%;
     height: auto;
-    z-index: 2;
     clip-path: inset(0 0 100% 0);
     cursor: auto;
 }
@@ -489,39 +455,47 @@ canvas {
     to {
       clip-path: inset(0 0 0 0);
     }
-  }
+}
 
 #left, #right {
-    height: 90vh;
     width: 50%;
+    height: 90vh;
     background-color: transparent;
 }
 
 #left {
+    float: left;
     shape-outside: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
     clip-path: polygon(0% 0%, 100% 0%, 0% 100%, 0% 100%);
-    float: left;
 }
   
 #right {
+    float: right;
     shape-outside: polygon(0% 0%, 100% 0%, 100% 100%);
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
-    float: right;
 }
 
 .info-text {
-    background: repeating-conic-gradient(from 142deg at 50% -5%, #E920FF 0% 1.8%, #0023FF 1.8% 3.6%, #1BD700 3.6% 5.4%, #FFFF00 5.4% 7.2%, #FF8600 7.2% 9%, #FF0D0D 9% 10.8%);
+    margin-top: 0;
+    width: 100%;
     font-family: 'Courier New', monospace;; 
     font-weight: 500;
     color: #ffffff;
     text-shadow: 0px 0px 3px black;
     text-align: center;
     font-size: .75em;
+    background: repeating-conic-gradient(
+        from 142deg at 50% -5%, 
+        #E920FF 0% 1.8%, 
+        #0023FF 1.8% 3.6%, 
+        #1BD700 3.6% 5.4%, 
+        #FFFF00 5.4% 7.2%, 
+        #FF8600 7.2% 9%, 
+        #FF0D0D 9% 10.8%
+    );
     clip-path: url(#myClip);
-    width: 100%;
     -webkit-mask: radial-gradient(70% 10% at center top, transparent 10px, black 10px);
     -webkit-mask-repeat: no-repeat;
-    margin-top: 0;
 }
 
 .info-text a {
@@ -541,8 +515,8 @@ h2 {
     display: none;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.75);
     opacity: 0;
+    background: rgba(0,0,0,0.75);
     animation: display-info .6s forwards;
 }
 
@@ -556,19 +530,23 @@ h2 {
     left: 33%;
     width: 23%;
     display: none;
-    animation: sunglasses-drop .6s forwards;
     z-index: 3;
+    animation: sunglasses-drop .6s forwards;
 }
 
 @keyframes sunglasses-drop {
-    from {top: 13%;}
-    to {top: 21.5%};
+    from {
+        top: 13%;
+    }
+    to {
+        top: 21.5%;
+    }
 }
 
 svg {
+    display: block;
     width: 0;
     height: 0;
-    display: block;
 }
 
 #request-portrait {
@@ -586,44 +564,43 @@ svg {
 }
 
 @keyframes bounce-in {
-    0%{transform: scale(0%)}
-    80%{transform: scale(110%);}
-    100%{transform: scale(100%);}
+    0% {
+        transform: scale(0%);
+    }
+    80% {
+        transform: scale(110%);
+    }
+    100% {
+        transform: scale(100%);
+    }
 }
 
+
+/* Media Queries */
+
 @media (max-width: 480px) {
-    
     .button {
         position: relative;
         width: 13vmin;
         height: 13vmin;
     }
-
     #pen-width-text {
-        font-size: 2.5vmin;
         top: 80%;
         left: 72%;
+        font-size: 2.5vmin;
     }
-
     #eraser-width-text {
-        font-size: 2.3vmin;
         top: 80%;
         left: 75%;
+        font-size: 2.3vmin;
     }
 
-   #square-count {
+    #square-count {
         font-size: 2.5vmin;
     }
 
     #flex-container {
         min-height: 83vh;
-    }
-}
-
-@media (min-width: 900px) {
-    .button {
-        width: 10vmin;
-        height: 10vmin;
     }
 }
 
@@ -637,6 +614,13 @@ svg {
     #mona-lisa-container {
         max-width: 40vw;
         max-width: 270px;
+    }
+}
+
+@media (min-width: 900px) {
+    .button {
+        width: 10vmin;
+        height: 10vmin;
     }
 }
 

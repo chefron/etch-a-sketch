@@ -1,3 +1,6 @@
+// Buttons
+
+// Buttons object contains information about each button
 const buttons = {
     blowtorch: {
       element: document.getElementById("blowtorch-button"),
@@ -16,7 +19,7 @@ const buttons = {
         isActive: false,
         activate: activateSpraypaint,
         deactivate: deactivateSpraypaint,
-      },
+    },
     grid: {
       element: document.getElementById("grid-button-wrapper"),
       isActive: true,
@@ -43,50 +46,53 @@ const buttons = {
     }
 };
 
-const buttonsArray = Object.values(buttons); // returns an array from the buttons object
+const buttonsArray = Object.values(buttons); // Creates an array from the buttons object
 
+// Attaches a click event listener to each button in the buttons array
 buttonsArray.forEach(button => {
     button.element.addEventListener("click", function() {
-        if (!button.isActive) {
+        if (!button.isActive) { // If the button is not already active
             buttonsArray.forEach(otherButton => {
                 if (otherButton.isActive) {
-                    otherButton.deactivate();
+                    otherButton.deactivate(); // Deactivate any other active buttons
                     otherButton.isActive = false;
                 }
             });
-            button.activate();
+            button.activate(); // Activate the current button
             button.isActive = true;
         }
     });
 });
 
-const monaLisaContainer = document.getElementById("mona-lisa-container");
+// The following functions are used to activate/deactivate each button
+
+const monaLisaContainer = document.getElementById("mona-lisa-container"); // Gets Mona Lisa for custom cursors
 
 function activateBlowtorch(){
     const blowtorchButton = document.getElementById("blowtorch-button");
     blowtorchButton.classList.remove("unselected");
     blowtorchButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/blowtorch-cursor.png"), auto`);
-}
+};
 
 function deactivateBlowtorch(){
     const blowtorchButton = document.getElementById("blowtorch-button");
     blowtorchButton.classList.remove("selected");
     blowtorchButton.classList.add("unselected");
-}
+};
 
 function activateSplatter(){
     const splatterButton = document.getElementById("splatter-button");
     splatterButton.classList.remove("unselected");
     splatterButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/paint-bucket-cursor.png"), auto`);
-}
+};
 
 function deactivateSplatter(){
     const splatterButton = document.getElementById("splatter-button");
     splatterButton.classList.remove("selected");
     splatterButton.classList.add("unselected");
-}
+};
 
 function activateSpraypaint() {
     isSpraypaintSelected = true;
@@ -94,14 +100,14 @@ function activateSpraypaint() {
     spraypaintButton.classList.remove("unselected");
     spraypaintButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/spraypaint-cursor.png"), auto`);
-}
+};
 
 function deactivateSpraypaint() {
     isSpraypaintSelected = false;
     const spraypaintButton = document.getElementById("spraypaint-button");
     spraypaintButton.classList.remove("selected");
     spraypaintButton.classList.add("unselected");
-}
+};
 
 function activateGrid(){
     const gridButtonWrapper = document.getElementById("grid-button-wrapper");
@@ -112,7 +118,7 @@ function activateGrid(){
     gridButton.style.display = "block";
     gridButtonOff.style.display = "none";
     monaLisaContainer.style.setProperty("--cursor", `url("images/grid-cursor.png") 0 0, auto`);
-}
+};
 
 function deactivateGrid(){
     const gridButtonWrapper = document.getElementById("grid-button-wrapper");
@@ -125,19 +131,19 @@ function deactivateGrid(){
     if (!isGridHidden){
         toggleGrid();
         isGridHidden = true;
-    }
-}
+    };
+};
 
 function activateEraser(){
     const eraserButton = document.getElementById("eraser-button");
     eraserButton.classList.remove("unselected");
     eraserButton.classList.add("selected");
     monaLisaContainer.style.setProperty("--cursor", `url("images/eraser-cursor.png") 15 45, auto`);
-    findColoredSquares(); // finds which squares are colored and changes their z-index to make them erasable
+    findColoredSquares(); // Find which squares are colored and change their z-index to make them erasable
     eraserWidthText.style.display = "block";
     widthSlider.style.display = "block";
     isEraserSelected = true;
-}
+};
 
 function deactivateEraser(){
     const eraserButton = document.getElementById("eraser-button");
@@ -148,7 +154,7 @@ function deactivateEraser(){
     eraserWidthText.style.display = "none";
     widthSlider.style.display = "none";
     isEraserSelected = false;
-}
+};
 
 function activatePen(){
     const penButton = document.getElementById("pen-button");
@@ -157,7 +163,7 @@ function activatePen(){
     monaLisaContainer.style.setProperty("--cursor", `url("images/pen-cursor.png") 0 32, auto`);
     penWidthText.style.display = "block";
     widthSlider.style.display = "block";
-}
+};
 
 function deactivatePen(){
     const penButton = document.getElementById("pen-button");
@@ -166,10 +172,11 @@ function deactivatePen(){
     monaLisaContainer.style.setProperty("--cursor", "auto");
     penWidthText.style.display = "none";
     widthSlider.style.display = "none";
-}
+};
 
 const resetButton = document.getElementById("reset-button");
 
+// Clears all canvas, grid, and fire elements
 function resetMonaLisa(){
     resetButton.classList.remove("unselected"); // highlights button
     resetButton.classList.add("selected");
@@ -177,106 +184,77 @@ function resetMonaLisa(){
     resetCanvas(); // erases items drawn on canvas
     for (let i = 0; i < numOfSquares; i++){ // resets squares' colors
         squares[i].style.backgroundColor = "";
-    }
+    };
     if (isMonaLisaBurning){ // erases burning SVG layer
         const fire = document.querySelector(".circle");
         monaLisaContainer.removeChild(fire);
         isMonaLisaBurning = false;
-    }
-}
+    };
+};
 
 function deactivateResetButton(){
     resetButton.classList.remove("selected"); // highlights button
     resetButton.classList.add("unselected");
-}
+};
 
-
-// COLOR PICKER:
+// Color Picker
 
 let colorSelection = "#000000"; // Default color is black
 const colorPicker = document.getElementById("color-picker");
 const hex = document.getElementById("hex"); // HEX text in color picker
 
-// gets color from color picker
+// Gets color from color picker
 colorPicker.addEventListener("input", function(){
     colorSelection = colorPicker.value;
-    }, false);
+}, false);
 
 
-// GRID (original Odin Project assignment):
+// Grid (original Odin Project assignment)
 
-// sets default cursor as grid cursor
+// Sets default cursor as grid cursor
 function initializeGrid() {
     monaLisaContainer.style.setProperty("--cursor", `url("images/grid-cursor.png") 0 0, auto`);
-}
+};
 
 initializeGrid();
 
+// Selects the grid and slider elements and sets default values
 const grid = document.getElementById("grid");
 const gridSlider = document.getElementById("grid-slider");
 let isGridHidden = false;
 let numOfSquares = 100;
 
+// Creates a grid of squares based on the numOfSquares variable, which can be changed by user
 function populateGrid(){
     for (let i = 0; i < numOfSquares; i++){
         let square = document.createElement('div');
         square.classList.add("square");
         square.style.width = `${(100/(Math.sqrt(numOfSquares))) + "%"}`;
         grid.appendChild(square);
-    }
+    };
 
     let squares = document.querySelectorAll(".square");
 
+    // Hides squares if another tool is selected
     if (isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.borderStyle = "none";
                 squares[i].style.zIndex = "0";
             };
-    }
+    };
+
+    // Displays squares
     if (!isGridHidden){
         for (let i = 0; i < numOfSquares; i++){
-                squares[i].style.borderStyle = "dashed";
-                squares[i].style.zIndex = "1";
-            };
-    }
-}
+            squares[i].style.borderStyle = "dashed";
+            squares[i].style.zIndex = "1";
+        };
+    };
+};
 
 populateGrid();
 
 let mouseDown = false;
-
-function assignEventListeners(){
-    squares = document.querySelectorAll(".square");
-    for (let i = 0; i < numOfSquares; i++){
-        
-    squares[i].addEventListener("mousedown", function(){
-        mouseDown = true;
-        console.log("mousedown");
-    });
-        
-    squares[i].addEventListener("mousedown", paint(i));
-    
-    squares[i].addEventListener("mouseover", paint(i));
-
-
-    squares[i].addEventListener("touchstart", function(event) {
-        paint(i)(event);
-    }, { passive: true });
-
-    squares[i].addEventListener("touchmove", function(event) {
-        let touch = event.touches[0];
-        let rect = grid.getBoundingClientRect();
-        let x = touch.clientX - rect.left;
-        let y = touch.clientY - rect.top;
-        let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
-        if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
-            paint(i)(event);
-        }
-        }, { passive: true });
-    }
-}
-
-assignEventListeners();
 
 document.addEventListener("mouseup", function(){
     mouseDown = false;
@@ -286,53 +264,89 @@ document.addEventListener("touchend", function(){
     mouseDown = false;
 });  
 
-// Changes square colors when you drag mouse over them
+// Assigns event listeners to each square in the grid
+function assignEventListeners(){
+    squares = document.querySelectorAll(".square");
+    for (let i = 0; i < numOfSquares; i++){
+        
+    squares[i].addEventListener("mousedown", function(){
+        mouseDown = true;
+        console.log("mousedown");
+    });
+    
+    // Colors squares
+    squares[i].addEventListener("mousedown", paint(i));
+    squares[i].addEventListener("mouseover", paint(i));
+
+    // Colors squares (mobile)
+    squares[i].addEventListener("touchstart", function(event) {
+        paint(i)(event);
+    }, { passive: true });
+    squares[i].addEventListener("touchmove", function(event) {
+        let touch = event.touches[0];
+        let rect = grid.getBoundingClientRect();
+        let x = touch.clientX - rect.left;
+        let y = touch.clientY - rect.top;
+        let i = Math.floor((y / rect.height) * Math.sqrt(numOfSquares)) * Math.sqrt(numOfSquares) + Math.floor((x / rect.width) * Math.sqrt(numOfSquares)); // Gets index of square
+        if ((x > 0 && x < rect.width) && (y > 0 && y < rect.height)){ // Only paints if user touches within grid 
+            paint(i)(event);
+        }}, { passive: true });
+    }
+}
+
+assignEventListeners();
+
+// Changes the color of a square based on user interaction
 function paint(i){
     let squares = document.querySelectorAll(".square");
     
     return function(event){
         let currentSquare = squares[i];
 
-        if (event.type === "touchstart" || event.type === "touchmove" && !buttons.eraser.isActive) {
-            currentSquare.style.backgroundColor = colorSelection;
-            console.log("fffuuuuuc")
-          } else if (event.type === "touchstart" || event.type === "touchmove" && buttons.eraser.isActive) {
-            currentSquare.style.backgroundColor = ""; // eraser tool resets background colors of squares
-            currentSquare.style.zIndex = "0";
-          }
-
+        // If the user is not using the eraser tool, paint the square with the selected color
         if (mouseDown && !isGridHidden && !buttons.eraser.isActive){
             currentSquare.style.backgroundColor = colorSelection;
-        } else if (mouseDown && buttons.eraser.isActive) {
+        }
+        // If the user is using the eraser tool, erase the color of the square
+         else if (mouseDown && buttons.eraser.isActive) {
             currentSquare.style.backgroundColor = ""; 
             currentSquare.style.zIndex = "0";
-        }
-    }
+        };
+
+        // For mobile
+        if (event.type === "touchstart" || event.type === "touchmove" && !buttons.eraser.isActive) {
+            currentSquare.style.backgroundColor = colorSelection;
+        } else if (event.type === "touchstart" || event.type === "touchmove" && buttons.eraser.isActive) {
+            currentSquare.style.backgroundColor = ""; // Eraser tool resets background colors of squares
+            currentSquare.style.zIndex = "0";
+        };
+    };
 };
 
+// Clears grid by removing all squares
 function clearGrid(){
     squares.forEach(square => square.remove());
 }
 
+// Allows user to adjust grid size with slider
 gridSlider.addEventListener("input", function(){
-    numOfSquares = Math.pow(Math.round(Math.sqrt(gridSlider.value)), 2); // returns slider value squared
-    clearGrid();
-    repopulateGrid();
-    getNumberOfSquares();
+    numOfSquares = Math.pow(Math.round(Math.sqrt(gridSlider.value)), 2); // Rounds slider value to nearest square number
+    clearGrid(); // Clears existing grid
+    repopulateGrid(); // Repopulates grid with new number of squares
+    getNumberOfSquares(); // Updates the number of squares displayed on button
 });
 
+// Retrieves square count to display on button
 const squareCount = document.getElementById("square-count")
-
-// gets number of squares so it can be shown on button
 function getNumberOfSquares(){
     squareCount.innerHTML = `${Math.sqrt(numOfSquares)} &#215 ${Math.sqrt(numOfSquares)}`;
 }
 
 getNumberOfSquares();
 
-// repopulates grid if user changes size
+// Repopulates grid when the user changes the size
 function repopulateGrid(){
-
+    // Creates new squares for the new grid size
     for (let i = 0; i < numOfSquares; i++){
         const square = document.createElement('div');
         square.classList.add("square");
@@ -343,19 +357,23 @@ function repopulateGrid(){
     let squares = document.querySelectorAll(".square");
 
     if (isGridHidden){
+        // If grid is hidden, hide the new squares
         for (let i = 0; i < numOfSquares; i++){
             squares[i].style.borderStyle = "none";
             squares[i].style.zIndex = "0"};
-        }
+    }
+
     if (!isGridHidden){
+        // If grid is visible, show the new squares
         for (let i = 0; i < numOfSquares; i++){
             squares[i].style.borderStyle = "dashed";
             squares[i].style.zIndex = "1"};
-        }
+    };
     
-    assignEventListeners();
-}
+    assignEventListeners(); // Reassigns event listeners to new squares
+};
 
+// Shows or hides grid when grid button is selected or unselected
 const gridButton = document.getElementById("grid-button");
 gridButton.addEventListener("click", toggleGrid);
 const gridButtonOff = document.getElementById("grid-button-off");
@@ -364,105 +382,103 @@ gridButtonOff.addEventListener("click", toggleGrid);
 function toggleGrid(){
     let squares = document.querySelectorAll(".square");
     if (isGridHidden){
+        // If grid is hidden, show it
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.zIndex = "1";
                 squares[i].style.borderStyle = "dashed"};
         console.log("show grid");
         
     } else {
+        // If grid is visible, hide it
         for (let i = 0; i < numOfSquares; i++){
                 squares[i].style.zIndex = "0";
                 squares[i].style.borderStyle = "none"};
         console.log("hide grid");
     }; 
+
     isGridHidden = !isGridHidden;
 };
 
 
-//BLOWTORCH:
+// Blowtorch:
 
 let isMonaLisaBurning = false;
 
+// For mobile devices
 monaLisaContainer.addEventListener("touchstart", function(e) {
     
+    // Checks if the blowtorch tool is active and Mona Lisa is not already burning
     if (buttons.blowtorch.isActive && !isMonaLisaBurning){
-        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
+        const dimensions = e.currentTarget.getBoundingClientRect(); // Gets size of Mona Lisa
         var touch = e.touches[0] || e.changedTouches[0];
-        const left = touch.pageX - dimensions.left;  // x position within element
+        const left = touch.pageX - dimensions.left;  // retrieves x position within element
         const right = dimensions.width - left;
-        const top = touch.pageY - dimensions.top; // y position within element
+        const top = touch.pageY - dimensions.top; // retrieves y position within element
         const bottom = dimensions.height - top;
         console.log("blowtorch touchstart");
-    
-    if (touch.pageX > dimensions.left && touch.pageX < dimensions.right // Checks if user touches within Mona Lisa
-        && touch.pageY > (dimensions.top - 15) && touch.pageY < (dimensions.bottom - 15)){
-        monaLisaContainer.style.setProperty("--left", `${left}px`);
-        monaLisaContainer.style.setProperty("--right", `${right}px`);
-        monaLisaContainer.style.setProperty("--top", `${top}px`);
-        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-        const fire = document.createElement("div");
-        fire.className = "circle";
-        monaLisaContainer.appendChild(fire);
-        isMonaLisaBurning = true;
-    }
-}
+
+    // Checks if user touches within Mona Lisa
+        if (touch.pageX > dimensions.left && touch.pageX < dimensions.right 
+            && touch.pageY > (dimensions.top - 15) && touch.pageY < (dimensions.bottom - 15)){
+            monaLisaContainer.style.setProperty("--left", `${left}px`);
+            monaLisaContainer.style.setProperty("--right", `${right}px`);
+            monaLisaContainer.style.setProperty("--top", `${top}px`);
+            monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+            const fire = document.createElement("div");
+            fire.className = "circle";
+            monaLisaContainer.appendChild(fire);
+            isMonaLisaBurning = true;
+        }
+    };
 }, { passive: true });
 
-// for desktop
+// For desktop
 monaLisaContainer.addEventListener("mousedown", function(e) {
     
     if (buttons.blowtorch.isActive && !isMonaLisaBurning){
-        const dimensions = e.currentTarget.getBoundingClientRect(); // gets size of Mona Lisa
+        const dimensions = e.currentTarget.getBoundingClientRect();
         console.log(dimensions);
-        const left = e.clientX - dimensions.left; // x position within element
+        const left = e.clientX - dimensions.left;
         const right = dimensions.width - left;
-        const top = e.clientY - dimensions.top; // y position within element
+        const top = e.clientY - dimensions.top;
         const bottom = dimensions.height - top; 
 
-    if (e.clientX > dimensions.left && e.clientX < dimensions.right // Checks if user clicks within Mona Lisa
-        && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
-        monaLisaContainer.style.setProperty("--left", `${left}px`);
-        monaLisaContainer.style.setProperty("--right", `${right}px`);
-        monaLisaContainer.style.setProperty("--top", `${top}px`);
-        monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
-        const fire = document.createElement("div");
-        fire.className = "circle";
-        monaLisaContainer.appendChild(fire);
-        isMonaLisaBurning = true;
-    }
-}});
+        if (e.clientX > dimensions.left && e.clientX < dimensions.right
+            && e.clientY > (dimensions.top - 15) && e.clientY < (dimensions.bottom - 15)){
+            monaLisaContainer.style.setProperty("--left", `${left}px`);
+            monaLisaContainer.style.setProperty("--right", `${right}px`);
+            monaLisaContainer.style.setProperty("--top", `${top}px`);
+            monaLisaContainer.style.setProperty("--bottom", `${bottom}px`);
+            const fire = document.createElement("div");
+            fire.className = "circle";
+            monaLisaContainer.appendChild(fire);
+            isMonaLisaBurning = true;
+        }
+    };
+});
 
 
-// CANVAS:
+// Canvas (for pen, paint splatter, and spray paint tools)
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-
 var monaLisaSize = monaLisaContainer.getBoundingClientRect();
-
 canvas.width = monaLisaSize.width;
 canvas.height = monaLisaSize.height;
 canvas.style.left = monaLisaSize.left+"px";
 canvas.style.top = monaLisaSize.top+"px";
 
-//Gets canvas size and pen (default tool) properties on load, initializes pen
+// Gets canvas size and pen (default tool) properties on load, initializes pen
 window.onload = function(){ //fixes canvas position bug by delaying getBoundingClientRect() until page has loaded
     const canvas = document.getElementById("canvas");
     monaLisaSize = monaLisaContainer.getBoundingClientRect();
-    
     canvas.width = monaLisaSize.width;
     canvas.height = monaLisaSize.height;
     canvas.style.left = monaLisaSize.left+"px";
     canvas.style.top = monaLisaSize.top+"px";
+};
 
-    //widthSlider.style.display = "block"
-   // penWidthText.style.display = "block";
-   // linewidth = widthSlider.value;
-   // penWidthText.innerHTML = `${linewidth}px`;
-    //eraserWidthText.innerHTML = `${linewidth}px`; //Preloads eraser text in case it's selected before width is changed
-}
-
-//gets and updates new canvas size if window is resized
+// Gets and updates new canvas size if window is resized
 window.onresize = function(){
     const canvas = document.getElementById("canvas");
     monaLisaSize = monaLisaContainer.getBoundingClientRect();
@@ -470,18 +486,18 @@ window.onresize = function(){
     canvas.height = monaLisaSize.height;
     canvas.style.left = monaLisaSize.left+"px";
     canvas.style.top = monaLisaSize.top+"px";
-}
+};
 
-// PEN and ERASER:
 
-let linewidth = 3; //default line width for pen and eraser
+// Pen and eraser:
 
+let linewidth = 3; // Sets default line width
 const widthSlider = document.getElementById("width-slider");
-const penWidthText = document.getElementById("pen-width-text")
-const eraserWidthText = document.getElementById("eraser-width-text")
+const penWidthText = document.getElementById("pen-width-text");
+const eraserWidthText = document.getElementById("eraser-width-text");
 let isEraserSelected = false;
 
-//Allows user to change line width
+// Allows user to change line width
 widthSlider.oninput = function(){
     linewidth = widthSlider.value;
     penWidthText.innerHTML = `${linewidth}px`;
@@ -490,12 +506,12 @@ widthSlider.oninput = function(){
         penWidthText.style.display = "block";
     } else if (buttons.eraser.isActive){
         eraserWidthText.style.display = "block";
-    }
-}
+    };
+};
 
 let isDrawing = false;
 
-//for mobile
+// For mobile
 const startDrawingMobile = (e) => {
     if (buttons.pen.isActive || buttons.eraser.isActive){
         context.strokeStyle = colorSelection;
@@ -507,7 +523,7 @@ const startDrawingMobile = (e) => {
     }
 }
 
-//for desktop
+// For desktop
 const startDrawingDesktop = (e) => {
     if (buttons.pen.isActive || buttons.eraser.isActive){
         context.strokeStyle = colorSelection;
@@ -549,7 +565,6 @@ const enterCanvas = (e) => {
 canvas.addEventListener("touchstart", startDrawingMobile);
 window.addEventListener("touchend", stopDrawing);
 canvas.addEventListener("touchmove", drawMobile);
-//canvas.addEventListener("touchenter", enterCanvas);
 
 // for desktop
 canvas.addEventListener("mousedown", startDrawingDesktop);
@@ -573,7 +588,7 @@ function erase(){
     context.globalCompositeOperation = "destination-out";
 }
 
-// for mobile
+//for mobile
 monaLisaContainer.addEventListener("touchstart", function(e) {
     if (buttons.eraser.isActive){
         erase();
@@ -582,7 +597,7 @@ monaLisaContainer.addEventListener("touchstart", function(e) {
     }
 )
 
-// for desktop
+//for desktop
 monaLisaContainer.onmousedown = function clickEvent(e) {
     if (buttons.eraser.isActive){
         erase();
@@ -608,14 +623,12 @@ canvas.addEventListener("touchmove", function(event) {
     }
 }, { passive: true });
 
-
-
 //PAINT SPLATTER:
 
 var particles = [];
 let isSplattering = false;
 
-// creates new particles on user touch
+//creates new particles on user touch
 canvas.addEventListener("touchstart", function(e) { // for mobile
     if (buttons.splatter.isActive && !isSplattering){
         isSplattering = true;
@@ -831,7 +844,6 @@ function RandomizeParticles(stageX, stageY) {
 function resetCanvas(){
     context.clearRect(0, 0, canvas.width, canvas.height); // clears canvas
 }
-const tooltip = document.getElementById("tooltip");
 
 resetWarning = document.getElementById("reset-warning");
 resetButtonContainer = document.getElementById("reset-button-container");
@@ -920,4 +932,3 @@ portrait.addEventListener("change", function(e) {
         requestPortrait.style.display = 'none';
     }
 })
-
